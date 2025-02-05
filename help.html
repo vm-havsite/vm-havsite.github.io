@@ -183,7 +183,6 @@
             <img src="images/logo_og.png" alt="Logo" height="80" width="60" style="border-radius: 4%;">
         </a>
         <a href="help.html" class="active">Help</a>
-        <a href="pnf.html">Profiles</a>
         <a href="pnf.html">Contact Us</a>
         <a href="pnf.html">FAQ</a>
         <a href="arcticles.html">Articles</a>
@@ -195,14 +194,17 @@
                 home
                 </span>
         </a>
+        <a href="cst.html">
+          <img src="images/user.png" style="height:30px; with:30px; border-radius:20px; margin-top:0px; ">
+        </a>
         <div class="search-bar">
-            <input type="text" placeholder="Search...">
-            <button><i class="fa fa-search"></i></button>
+            <input type="text" id="sb" placeholder="Search...">
+            <button onclick="searchfunction()"><i class="fa fa-search"></i></button>
         </div>
         <a href="javascript:void(0);" class="icon" onclick="myFunction()">
             <i class="fa fa-bars"></i>
         </a>
-    </div> 
+    </div
 <table>
     <tr>
         <td>
@@ -213,6 +215,41 @@
         </td>
     </tr>
 </table>
+    <script>
+        function searchfunction() {
+            var sbc = document.getElementById('sb').value;
+            if(sbc == "help") {
+                window.location.href = "https://havsite.neocities.org/havsite/help";
+            }
+            if(sbc == "testpage") {
+                window.location.href = "https://havsite.neocities.org/havsite/practise_javascript";
+            }
+            if(sbc == "arcticles") {
+                window.location.href = "https://havsite.neocities.org/havsite/arcticles";
+            }
+            if(sbc == "homepage") {
+                window.location.href = "https://havsite.neocities.org/havsite/homepage";
+            }
+            if(sbc == "download") {
+                window.location.href = "https://havsite.neocities.org/havsite/download";
+            }
+            if(sbc == "our team") {
+                window.location.href = "https://havsite.neocities.org/havsite/our team";
+            }
+            if(sbc == "music") {
+                window.location.href = "https://havsite.neocities.org/havsite/music";
+            }
+            if(sbc == "FAQ") {
+                window.location.href = "https://havsite.neocities.org/havsite/pnf";
+            }
+            if(sbc == "contact us") {
+                window.location.href = "https://havsite.neocities.org/havsite/pnf";
+            }
+            if(sbc == "profiles") {
+                window.location.href = "https://havsite.neocities.org/havsite/cst";
+            }
+        } 
+    </script>
 <script>
     function myFunction() {
       var x = document.getElementById("myTopnav");
