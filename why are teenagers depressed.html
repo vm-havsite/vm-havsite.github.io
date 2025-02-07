@@ -5,105 +5,166 @@
 <link rel="stylesheet" href="style.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <style>
-@keyframes hg{
-   0%{color: darkgoldenrod;}
-   20%{background-color: cadetblue;}
-   40%{color: #000;}
-   60%{background-color: rgb(74, 48, 179);}
-   80%{color: darkgoldenrod;}
-   100%{color: black; background-color: grey;}
-}
-
 body {
-  margin: 0;
-  font-family: Arial, Helvetica, sans-serif;
-}
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            background-color: #f9f9f9;
+            color: #333;
+        }
 
-.topnav {
-  overflow: hidden;
-  display: flex;
-  animation-name: hg;
-  animation-duration: 10s;
-  animation-iteration-count: infinite;
-}
-.topnav a {
-  float: left;
-  display: block;
-  color: #f2f2f2;
-  text-align: center;
-  padding: 14px 16px;
-  text-decoration: none;
-  font-size: 17px;
-}
+        .topnav {
+            overflow: hidden;
+            background: linear-gradient(45deg, #6a11cb, #2575fc);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
 
-.topnav a:hover {
-  background-color: #ddd;
-  color: black;
-}
+        .topnav a {
+            float: left;
+            display: block;
+            color: white;
+            text-align: center;
+            padding: 14px 16px;
+            text-decoration: none;
+            font-size: 17px;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
 
-.topnav a.active {
-  color: white;
-}
+        .topnav a:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+            transform: scale(1.1);
+        }
 
-.topnav .icon {
-  display: none;
-}
+        .topnav a.active {
+            font-weight: bold;
+        }
 
-@media screen and (max-width: 600px) {
-  .topnav a:not(:first-child) {display: none;}
-  .topnav a.icon {
-    float: right;
-    display: block;
-  }
-}
+        .topnav .icon {
+            display: none;
+        }
 
-@media screen and (max-width: 600px) {
-  .topnav.responsive {position: relative;}
-  .topnav.responsive .icon {
-    position: absolute;
-    right: 0;
-    top: 0;
-  }
-  .topnav.responsive a {
-    float: none;
-    display: block;
-    text-align: left;
-  }
-}
-.dropbtn {
-  background-color: #333;
-  color: black;
-  padding: 16px;
-  font-size: 16px;
-  border: none;
-}
+        .topnav .search-bar {
+            float: right;
+            display: flex;
+            align-items: center;
+            margin-right: 16px;
+        }
 
-.dropdown {
-  position: relative;
-  display: inline-block;
-}
+        .topnav input[type="text"] {
+            padding: 6px;
+            margin-right: 8px;
+            border: none;
+            border-radius: 4px;
+        }
 
-.dropdown-content {
-  display: none;
-  position: absolute;
-  background-color: #f1f1f1;
-  min-width: 160px;
-  
-  z-index: 1;
-}
+        .topnav button {
+            padding: 6px 10px;
+            border: none;
+            border-radius: 4px;
+            background-color: white;
+            color: #333;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
 
-.dropdown-content a {
-  color: black;
-  padding: 12px 16px;
-  text-decoration: none;
-  display: block;
-}
+        .topnav button:hover {
+            background-color: #ddd;
+        }
 
-.dropdown-content a:hover {background-color: #ddd;}
+        @media screen and (max-width: 600px) {
+            .topnav a:not(:first-child), .topnav .search-bar { display: none; }
+            .topnav a.icon { float: right; display: block; }
+        }
 
-.dropdown:hover .dropdown-content {display: block;}
+        @media screen and (max-width: 600px) {
+            .topnav.responsive { position: relative; }
+            .topnav.responsive .icon {
+                position: absolute;
+                right: 0;
+                top: 0;
+            }
+            .topnav.responsive a {
+                float: none;
+                display: block;
+                text-align: left;
+            }
+            .topnav.responsive .search-bar {
+                display: flex;
+                flex-direction: column;
+                align-items: stretch;
+                padding: 10px;
+            }
+        }
 
-.dropdown:hover .dropbtn {background-color: #3e8e41;}
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: white;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+            z-index: 1;
+        }
+
+        .dropdown-content a {
+            color: black;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+            transition: background-color 0.2s ease;
+        }
+
+        .dropdown-content a:hover { background-color: #ddd; }
+        .dropdown:hover .dropdown-content { display: block; }
+
+        h1 {
+            text-align: center;
+            margin: 20px 0;
+            font-size: 2.5em;
+        }
+
+        p {
+            text-align: center;
+            line-height: 1.6;
+            margin: 20px auto;
+            max-width: 800px;
+        }
+
+        img {
+            display: block;
+            margin: 20px auto;
+            max-width: 100%;
+            height: auto;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        footer {
+            background-color: #333;
+            color: white;
+            text-align: center;
+            padding: 10px;
+            margin-top: 20px;
+        }
+
+        footer a {
+            color: #6a11cb;
+            text-decoration: none;
+            margin: 0 5px;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+        .material-symbols-outlined {
+            font-variation-settings:
+             'FILL' 0,
+             'wght' 400,
+             'GRAD' 0,
+             'opsz' 24
+        }
 
 .m-content{
     background-color: white;
@@ -174,34 +235,34 @@ body {
         function searchfunction() {
             var sbc = document.getElementById('sb').value;
             if(sbc == "help") {
-                window.location.href = "https://havsite.neocities.org/havsite/help";
+                window.location.href = "https://vm-havsite.github.io/help";
             }
             if(sbc == "testpage") {
-                window.location.href = "https://havsite.neocities.org/havsite/practise_javascript";
+                window.location.href = "https://vm-havsite.github.io/practise_javascript";
             }
             if(sbc == "arcticles") {
-                window.location.href = "https://havsite.neocities.org/havsite/arcticles";
+                window.location.href = "https://vm-havsite.github.io/arcticles";
             }
             if(sbc == "homepage") {
-                window.location.href = "https://havsite.neocities.org/havsite/homepage";
+                window.location.href = "https://vm-havsite.github.io/homepage";
             }
             if(sbc == "download") {
-                window.location.href = "https://havsite.neocities.org/havsite/download";
+                window.location.href = "https://vm-havsite.github.io/download";
             }
             if(sbc == "our team") {
-                window.location.href = "https://havsite.neocities.org/havsite/our team";
+                window.location.href = "https://vm-havsite.github.io/our team";
             }
             if(sbc == "music") {
-                window.location.href = "https://havsite.neocities.org/havsite/music";
+                window.location.href = "https://vm-havsite.github.io/music";
             }
             if(sbc == "FAQ") {
-                window.location.href = "https://havsite.neocities.org/havsite/pnf";
+                window.location.href = "https://vm-havsite.github.io/pnf";
             }
             if(sbc == "contact us") {
-                window.location.href = "https://havsite.neocities.org/havsite/pnf";
+                window.location.href = "https://vm-havsite.github.io/pnf";
             }
             if(sbc == "profiles") {
-                window.location.href = "https://havsite.neocities.org/havsite/cst";
+                window.location.href = "https://vm-havsite.github.io/cst";
             }
         } 
     </script>

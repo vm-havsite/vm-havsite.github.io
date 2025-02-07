@@ -16,135 +16,196 @@
             font-family: sans-serif,ui-sans-serif;
             font-weight: 700;
         }
-        @keyframes hg{
-   0%{color: darkgoldenrod;}
-   20%{background-color: cadetblue;}
-   40%{color: #000;}
-   60%{background-color: rgb(74, 48, 179);}
-   80%{color: darkgoldenrod;}
-   100%{color: black; background-color: grey;}
-}
+        body {
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            background-color: #f9f9f9;
+            color: #333;
+        }
 
-body {
-  margin: 0;
-  font-family: Arial, Helvetica, sans-serif;
-}
+        .topnav {
+            overflow: hidden;
+            background: linear-gradient(45deg, #6a11cb, #2575fc);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
 
-.topnav {
-  overflow: hidden;
-  display: flex;
-  animation-name: hg;
-  animation-duration: 10s;
-  animation-iteration-count: infinite;
-}
+        .topnav a {
+            float: left;
+            display: block;
+            color: white;
+            text-align: center;
+            padding: 14px 16px;
+            text-decoration: none;
+            font-size: 17px;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
 
-.topnav a {
-  float: left;
-  display: block;
-  color: #f2f2f2;
-  text-align: center;
-  padding: 14px 16px;
-  text-decoration: none;
-  font-size: 17px;
-}
+        .topnav a:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+            transform: scale(1.1);
+        }
 
-.topnav a:hover {
-  background-color: #ddd;
-  color: black;
-}
+        .topnav a.active {
+            font-weight: bold;
+        }
 
-.topnav a.active {
-  color: white;
-}
+        .topnav .icon {
+            display: none;
+        }
 
-.topnav .icon {
-  display: none;
-}
+        .topnav .search-bar {
+            float: right;
+            display: flex;
+            align-items: center;
+            margin-right: 16px;
+        }
 
-@media screen and (max-width: 600px) {
-  .topnav a:not(:first-child) {display: none;}
-  .topnav a.icon {
-    float: right;
-    display: block;
-  }
-}
+        .topnav input[type="text"] {
+            padding: 6px;
+            margin-right: 8px;
+            border: none;
+            border-radius: 4px;
+        }
 
-@media screen and (max-width: 600px) {
-  .topnav.responsive {position: relative;}
-  .topnav.responsive .icon {
-    position: absolute;
-    right: 0;
-    top: 0;
-  }
-  .topnav.responsive a {
-    float: none;
-    display: block;
-    text-align: left;
-  }
-}
-.dropbtn {
-  background-color: #333;
-  color: black;
-  padding: 16px;
-  font-size: 16px;
-  border: none;
-}
+        .topnav button {
+            padding: 6px 10px;
+            border: none;
+            border-radius: 4px;
+            background-color: white;
+            color: #333;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
 
-.dropdown {
-  position: relative;
-  display: inline-block;
-}
+        .topnav button:hover {
+            background-color: #ddd;
+        }
 
-.dropdown-content {
-  display: none;
-  position: absolute;
-  background-color: #f1f1f1;
-  min-width: 160px;
-  
-  z-index: 1;
-}
+        @media screen and (max-width: 600px) {
+            .topnav a:not(:first-child), .topnav .search-bar { display: none; }
+            .topnav a.icon { float: right; display: block; }
+        }
 
-.dropdown-content a {
-  color: black;
-  padding: 12px 16px;
-  text-decoration: none;
-  display: block;
-}
+        @media screen and (max-width: 600px) {
+            .topnav.responsive { position: relative; }
+            .topnav.responsive .icon {
+                position: absolute;
+                right: 0;
+                top: 0;
+            }
+            .topnav.responsive a {
+                float: none;
+                display: block;
+                text-align: left;
+            }
+            .topnav.responsive .search-bar {
+                display: flex;
+                flex-direction: column;
+                align-items: stretch;
+                padding: 10px;
+            }
+        }
 
-.dropdown-content a:hover {background-color: #ddd;}
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
 
-.dropdown:hover .dropdown-content {display: block;}
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: white;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+            z-index: 1;
+        }
 
-.dropdown:hover .dropbtn {background-color: #3e8e41;}
+        .dropdown-content a {
+            color: black;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+            transition: background-color 0.2s ease;
+        }
+
+        .dropdown-content a:hover { background-color: #ddd; }
+        .dropdown:hover .dropdown-content { display: block; }
+
+        h1 {
+            text-align: center;
+            margin: 20px 0;
+            font-size: 2.5em;
+        }
+
+        p {
+            text-align: center;
+            line-height: 1.6;
+            margin: 20px auto;
+            max-width: 800px;
+        }
+
+        img {
+            display: block;
+            margin: 20px auto;
+            max-width: 100%;
+            height: auto;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        footer {
+            background-color: #333;
+            color: white;
+            text-align: center;
+            padding: 10px;
+            margin-top: 20px;
+        }
+
+        footer a {
+            color: #6a11cb;
+            text-decoration: none;
+            margin: 0 5px;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+        .material-symbols-outlined {
+            font-variation-settings:
+             'FILL' 0,
+             'wght' 400,
+             'GRAD' 0,
+             'opsz' 24
+        }
     </style>
 </head>
 <body>
-    <div class="topnav" id="myTopnav">
-        <a  href="about tech bro.html">
-            <img src="images/logo_og.png" height="80px" width="80px" style="margin-left: 0px; border-radius: 4%;">
+        <div class="topnav" id="myTopnav">
+        <a href="about tech bro.html">
+            <img src="images/logo_og.png" alt="Logo" height="80" width="60" style="border-radius: 4%;">
         </a>
-        <a href="help.html" class="active">help</a>
-        <a href="pnf.html">profiles</a>
-        <a href="pnf.html">Contact us</a>
+        <a href="help.html" class="active">Help</a>
+        <a href="pnf.html">Contact Us</a>
         <a href="pnf.html">FAQ</a>
-        <a href="arcticles.html">arcticles</a>
-        <a href="practise_javascript.html">test page</a>
-        <a href="our team.html">Our team</a>
-        <a href="download.html">download</a>
-        <a href="javascript:void(0);" class="icon" onclick="myFunction()">
-        <a href="hompage(1).html" style="margin-right: 0px; margin-top: 2px;">
-                <img src="images/homepage icon.png" height="20px" width="20px" style="float: right; align-self: inherit;">
-            </a>
-          <div class="dropdown">
-            <button class="dropbtn"><i class="fa fa-bars"></i></button>
-            <div class="dropdown-content">
-              <a href="pnf.html">profiles</a>
-              <a href="help.html">help</a>
-              <a href="#">Link 3</a>
-            </div>
-            </div>
+        <a href="arcticles.html">Articles</a>
+        <a href="practise_javascript.html">Testpage</a>
+        <a href="our team.html">Our Team</a>
+        <a href="download.html">Download</a>
+        <a href="hompage(1).html">
+            <span class="material-symbols-outlined">
+                home
+                </span>
         </a>
-      </div>
+        <a href="cst.html">
+          <img src="images/user.png" style="height:30px; with:30px; border-radius:20px; margin-top:0px; ">
+        </a>
+        <div class="search-bar">
+            <input type="text" id="sb" placeholder="Search...">
+            <button onclick="searchfunction()"><i class="fa fa-search"></i></button>
+        </div>
+        <a href="javascript:void(0);" class="icon" onclick="myFunction()">
+            <i class="fa fa-bars"></i>
+        </a>
+    </div>
 <div class="main_content">
     <h1>Why Windows 10 Is the Best Windows OS Ever</h1>
 
@@ -262,5 +323,40 @@ Windows 10 wasn’t just another operating system—it was a chapter in our live
 <hr>
 <br>
 </div>
+    <script>
+        function searchfunction() {
+            var sbc = document.getElementById('sb').value;
+            if(sbc == "help") {
+                window.location.href = "https://vm-havsite.github.io/help";
+            }
+            if(sbc == "testpage") {
+                window.location.href = "https://vm-havsite.github.io/practise_javascript";
+            }
+            if(sbc == "arcticles") {
+                window.location.href = "https://vm-havsite.github.io/arcticles";
+            }
+            if(sbc == "homepage") {
+                window.location.href = "https://vm-havsite.github.io/homepage";
+            }
+            if(sbc == "download") {
+                window.location.href = "https://vm-havsite.github.io/download";
+            }
+            if(sbc == "our team") {
+                window.location.href = "https://vm-havsite.github.io/our team";
+            }
+            if(sbc == "music") {
+                window.location.href = "https://vm-havsite.github.io/music";
+            }
+            if(sbc == "FAQ") {
+                window.location.href = "https://vm-havsite.github.io/pnf";
+            }
+            if(sbc == "contact us") {
+                window.location.href = "https://vm-havsite.github.io/pnf";
+            }
+            if(sbc == "profiles") {
+                window.location.href = "https://vm-havsite.github.io/cst";
+            }
+        } 
+    </script>
 </body>
 </html>

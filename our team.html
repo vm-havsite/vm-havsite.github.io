@@ -83,17 +83,30 @@
 </head>
 <body>
     <div class="topnav" id="myTopnav">
-        <a  href="about tech bro.html">
-            <img src="images/logo_og.png" height="80px" width="80px" style="margin-left: 0px; border-radius: 4%;">
+        <a href="about tech bro.html">
+            <img src="images/logo_og.png" alt="Logo" height="80" width="60" style="border-radius: 4%;">
         </a>
-        <a href="help.html" class="active">help</a>
-        <a href="profiles.html">profiles</a>
-        <a href="#contact">Contact us</a>
-        <a href="FAQ.html">FAQ</a>
+        <a href="help.html" class="active">Help</a>
+        <a href="pnf.html">Contact Us</a>
+        <a href="pnf.html">FAQ</a>
+        <a href="arcticles.html">Articles</a>
+        <a href="practise_javascript.html">Testpage</a>
+        <a href="our team.html">Our Team</a>
+        <a href="download.html">Download</a>
+        <a href="hompage(1).html">
+            <span class="material-symbols-outlined">
+                home
+                </span>
+        </a>
+        <a href="cst.html">
+          <img src="images/user.png" style="height:30px; with:30px; border-radius:20px; margin-top:0px; ">
+        </a>
+        <div class="search-bar">
+            <input type="text" id="sb" placeholder="Search...">
+            <button onclick="searchfunction()"><i class="fa fa-search"></i></button>
+        </div>
         <a href="javascript:void(0);" class="icon" onclick="myFunction()">
-        <a href="hompage(1).html" style="margin-right: 0px; margin-top: 2px;">
-                <img src="images/homepage icon.png" height="20px" width="20px" style="float: right; align-self: inherit;">
-        </a>
+            <i class="fa fa-bars"></i>
         </a>
     </div>
 <div class="vivaan">
@@ -130,6 +143,41 @@
           }
         }
         </script>
+    <script>
+        function searchfunction() {
+            var sbc = document.getElementById('sb').value;
+            if(sbc == "help") {
+                window.location.href = "https://vm-havsite.github.io/help";
+            }
+            if(sbc == "testpage") {
+                window.location.href = "https://vm-havsite.github.io/practise_javascript";
+            }
+            if(sbc == "arcticles") {
+                window.location.href = "https://vm-havsite.github.io/arcticles";
+            }
+            if(sbc == "homepage") {
+                window.location.href = "https://vm-havsite.github.io/homepage";
+            }
+            if(sbc == "download") {
+                window.location.href = "https://vm-havsite.github.io/download";
+            }
+            if(sbc == "our team") {
+                window.location.href = "https://vm-havsite.github.io/our team";
+            }
+            if(sbc == "music") {
+                window.location.href = "https://vm-havsite.github.io/music";
+            }
+            if(sbc == "FAQ") {
+                window.location.href = "https://vm-havsite.github.io/pnf";
+            }
+            if(sbc == "contact us") {
+                window.location.href = "https://vm-havsite.github.io/pnf";
+            }
+            if(sbc == "profiles") {
+                window.location.href = "https://vm-havsite.github.io/cst";
+            }
+        } 
+    </script>
     <footer style="background-color: #333; height: 20px; margin-top: 440px;">
         <p style="color: white; text-align: center;">© 2024 by vivaan</p>
     </footer>
