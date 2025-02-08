@@ -236,11 +236,11 @@
         <a href="cst.html">
           <img src="images/user.png" style="height:30px; with:30px; border-radius:20px; margin-top:0px; ">
         </a>
-        <div class="search-bar">
-            <input type="text" id="sb" placeholder="Search...">
-            <button onclick="searchfunction()"><i class="fa fa-search"></i></button>
+        <div class="search-bar" tabindex="0">
+            <input type="text" id="sb" placeholder="Search..." aria-label="Search">
+            <button onclick="searchfunction()" aria-label="Search Button><i class="fa fa-search"></i></button>
         </div>
-        <a href="javascript:void(0);" class="icon" onclick="myFunction()">
+        <a href="javascript:void(0);" class="icon" onclick="toggleNav()" onclick="myFunction()">
             <i class="fa fa-bars"></i>
         </a>
     </div
