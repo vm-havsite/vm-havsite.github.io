@@ -232,39 +232,29 @@
         }
     </script>
     <script defer loading="lazy">
-        function searchfunction() {
-            var sbc = document.getElementById('sb').value;
-            if(sbc == "help") {
-                window.location.href = "https://vm-havsite.github.io/help";
+        function searchFunction() {
+            var sbc = document.getElementById('sb').value.toLowerCase();
+            const pages = {
+                "help": "https://vm-havsite.github.io/help",
+                "testpage": "https://vm-havsite.github.io/practise_javascript",
+                "arcticles": "https://vm-havsite.github.io/arcticles",
+                "homepage": "https://vm-havsite.github.io/homepage",
+                "download": "https://vm-havsite.github.io/download",
+                "our team": "https://vm-havsite.github.io/our team",
+                "music": "https://vm-havsite.github.io/music",
+                "faq": "https://vm-havsite.github.io/pnf",
+                "contact us": "https://vm-havsite.github.io/pnf",
+                "profiles": "https://vm-havsite.github.io/cst"
+            };
+            if (pages[sbc]) {
+                window.location.href = pages[sbc];
             }
-            if(sbc == "testpage") {
-                window.location.href = "https://vm-havsite.github.io/practise_javascript";
+        }
+        document.getElementById("sb").addEventListener("keypress", function(event) {
+            if (event.key === "Enter") {
+                searchFunction();
             }
-            if(sbc == "arcticles") {
-                window.location.href = "https://vm-havsite.github.io/arcticles";
-            }
-            if(sbc == "homepage") {
-                window.location.href = "https://vm-havsite.github.io/homepage";
-            }
-            if(sbc == "download") {
-                window.location.href = "https://vm-havsite.github.io/download";
-            }
-            if(sbc == "our team") {
-                window.location.href = "https://vm-havsite.github.io/our team";
-            }
-            if(sbc == "music") {
-                window.location.href = "https://vm-havsite.github.io/music";
-            }
-            if(sbc == "FAQ") {
-                window.location.href = "https://vm-havsite.github.io/pnf";
-            }
-            if(sbc == "contact us") {
-                window.location.href = "https://vm-havsite.github.io/pnf";
-            }
-            if(sbc == "profiles") {
-                window.location.href = "https://vm-havsite.github.io/cst";
-            }
-        } 
+        });
     </script>
 </body>
 </html>
