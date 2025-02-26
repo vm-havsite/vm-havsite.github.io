@@ -7,11 +7,27 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=home" />
 <style>
-                body {
+        
+       /* Light mode (default) */
+        :root {
+            --bg-color: #f9f9f9;
+            --text-color: #333;
+            --arcticle-bg-color: #333;
+            --arcticle-box-shadow: #e4e4e4;
+        }
+
+        .dark-mode {
+            --bg-color: #222222;
+            --text-color: #ffffff;
+            --arcticle-bg-color: #333;
+            --arcticle-box-shadow: #e4e4e4;
+        }
+
+        body {
             margin: 0;
             font-family: Arial, Helvetica, sans-serif;
-            background-color: #f9f9f9;
-            color: #333;
+            background-color: var(--bg-color);
+            color: var(--text-color);
         }
 
         .topnav {
@@ -145,7 +161,7 @@
         }
 
         footer a {
-            color: #6a11cb;
+            color: #f4e8e8;
             text-decoration: none;
             margin: 0 5px;
         }
@@ -164,9 +180,9 @@
 .why-are-teenagers-depressed{
 position: absolute;
 left: 2px;
-background-color: white;
+background-color: var(--arcticle-bg-color);
 border-radius: 4%;
-box-shadow: grey;
+box-shadow: var(--arcticle-box-shadow);
 display: flex;
 height: inherit;
 width: 200px;
@@ -176,9 +192,9 @@ box-shadow: green;
 .ratan-tata{
 position: absolute;
 left: 220px;
-background-color: white;
+background-color: var(--arcticle-bg-color);
 border-radius: 4%;
-box-shadow: grey;
+box-shadow: var(--arcticle-box-shadow);
 display: flex;
 height: inherit;
 width: 200px;
@@ -187,9 +203,9 @@ top: 120px;
 .burnout{
   position: absolute;
 left: 438px;
-background-color: white;
+background-color: var(--arcticle-bg-color);
 border-radius: 4%;
-box-shadow: grey;
+box-shadow: var(--arcticle-box-shadow);
 display: flex;
 height: inherit;
 width: 200px;
@@ -200,9 +216,9 @@ top: 120px;
 position: absolute;
 top: 120px;
 left: 656px;
-background-color: white;
+background-color: var(--arcticle-bg-color);
 border-radius: 4%;
-box-shadow: grey;
+box-shadow: var(--arcticle-box-shadow);
 display: flex;
 height: inherit;
 width: 200px;
@@ -258,25 +274,25 @@ width: 200px;
         </a>
     </div>
 <div class="why-are-teenagers-depressed" id="db1">
-<a href="why are teenagers depressed.html" style="color:black;">
+<a href="why are teenagers depressed.html" style="color:var(--text-color);">
 <img src="images/wrtd.jpg" height="160px" width="140px" style="margin-left: 0%;">
 <p style="margin-left: 0px;">why are teenagers<br> depressed?</p>
 </a>
 </div>
 <div class="ratan-tata">
-  <a href="rt.html" style="color:black;">
+  <a href="rt.html" style="color:var(--text-color);">
   <img src="images/rtf-t.jfif" height="160px" width="140px" style="margin-left: 10%;"><br>
   <p style="margin-left: 10px;">Ratanji Tata<br>(1937-2024)</p>
   </a>
 </div>
 <div class="burnout">
-  <a href="burnoutreal.html" style="color:black;">
+  <a href="burnoutreal.html" style="color:var(--text-color);">
   <img src="images/The-Burnout-Generation-Why-Millennials-and-Gen-Z-Are-Getting-Tired-of-Work_Blog-Banner.png" height="160px" width="140px" style="margin-left: 10%;"><br>
   <p style="margin-left: 10px;">why are mellinials and gen-z so tired?</p>
   </a>
 </div>
 <div class="windows10">
-  <a href="windows 10.html" style="color:black;">
+  <a href="windows 10.html" style="color:var(--text-color);">
   <img src="images/windows 10.jpg" height="160px" width="140px" style="margin-left: 10%;"><br>
   <p style="margin-left: 40px;">windows 10<br>
   the best os ever?</p>
