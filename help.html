@@ -1,4 +1,4 @@
-<html>
+<html lang="en" id="html-root">
 <head>
     <title>homepage</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -7,19 +7,29 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=home" />
     <meta http-equiv=”refresh” content=”5″>
     <style>
-    h1::selection {
-    background: green;
-    color: black;
-}
-::selection {
-    background: yellow;
-    color: black;
-}
+        /* Light mode (default) */
+        :root {
+            --bg-color: #f9f9f9;
+            --text-color: #333;
+        }
+
+        .dark-mode {
+            --bg-color: #222222;
+            --text-color: #ffffff;
+        }
+        h1::selection {
+            background: green;
+            color: black;
+        }
+        ::selection {
+            background: yellow;
+            color: black;
+        }
         body {
             margin: 0;
             font-family: Arial, Helvetica, sans-serif;
-            background-color: #f9f9f9;
-            color: #333;
+            background-color: var(--bg-color);
+            color: var(--text-color);
         }
 
         .topnav {
@@ -160,7 +170,7 @@
         }
 
         footer a {
-            color: #6a11cb;
+            color: #f4e8e8;
             text-decoration: none;
             margin: 0 5px;
         }
@@ -215,6 +225,7 @@
         </td>
     </tr>
 </table>
+    <script src="myscript.js"></script>
     <script>
         function searchfunction() {
             var sbc = document.getElementById('sb').value;
