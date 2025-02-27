@@ -1,26 +1,40 @@
-\<!DOCTYPE html>
-<html>
+<!DOCTYPE html>
+<html lang="english" id="html-root">
 <head>
     <title>pg-1</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <link rel="icon" type="image/x-icon" href="images/logo_og.png">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=home" />
+    <meta charset="UTF-8">
     <meta http-equiv=”refresh” content=”5″>
-    <style>
-    h1::selection {
-    background: green;
-    color: black;
-}
-::selection {
-    background: yellow;
-    color: black;
-}
+    <meta name="viewport" content="width=device-width, initial-scale=1" decription="homepage">
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="icon" type="image/x-icon" href="images/logo_og.png">
+    <link rel="stylesheet" rel="preconnect" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" rel="preconnect" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=home" />
+<style>
+        /* Light mode (default) */
+        :root {
+            --bg-color: #f9f9f9;
+            --text-color: #333;
+        }
+
+        .dark-mode {
+            --bg-color: #222222;
+            --text-color: #ffffff;
+        }
+        h1::selection {
+            background: green;
+            color: black;
+        }
+        ::selection {
+            background: yellow;
+            color: black;
+        }
         body {
             margin: 0;
             font-family: Arial, Helvetica, sans-serif;
-            background-color: #f9f9f9;
-            color: #333;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            transition: background-color 0.3s ease, color 0.3s ease;
         }
 
         .topnav {
@@ -161,7 +175,7 @@
         }
 
         footer a {
-            color: #6a11cb;
+            color: #f4e8e8;
             text-decoration: none;
             margin: 0 5px;
         }
@@ -198,7 +212,7 @@
         <a href="cst.html">
           <img src="images/user.png" style="height:30px; width:30px; border-radius:20px; margin-top:0px; ">
         </a>
-        <div class="search-bar">
+        <div class="search-bar" tabindex="0">
             <input type="text" id="sb" placeholder="Search...">
             <button onclick="searchfunction()"><i class="fa fa-search"></i></button>
         </div>
@@ -207,19 +221,21 @@
         </a>
     </div>
 
-    <h1>Welcome to Havsite</h1>
-    <p>
+    <h1 loading="eager">Welcome to Havsite</h1>
+    <p loading="eager">
         <b>Who are we?</b><br>
         We created this website for fun, here you can know about your classmates & funny stories. HERE YOU CAN GET THE LATEST UPDATES, chat with each other, and socialize.<br>
         No need to thank us, just have fun & enjoy, and always remember to never take that admiring smile off your face. You deserve the very best.
     </p>
     <img src="images/quote.jpg" alt="Quote">
-
+<a href="ct1.html">
+<button>ct1</button>
+</a>
     <footer>
         <p>© 2024 by Vivaan | <a href="#Privacy" class="pp">Privacy Policy</a> | <a href="#terms">Terms of Service</a></p>
     </footer>
-
-    <script>
+    <script src="myscript.js"></script>
+    <script defer loading="eager">
         function myFunction() {
             var x = document.getElementById("myTopnav");
             if (x.className === "topnav") {
@@ -229,40 +245,30 @@
             }
         }
     </script>
-    <script>
-        function searchfunction() {
-            var sbc = document.getElementById('sb').value;
-            if(sbc == "help") {
-                window.location.href = "https://vm-havsite.github.io/help";
+    <script defer loading="lazy">
+        function searchFunction() {
+            var sbc = document.getElementById('sb').value.toLowerCase();
+            const pages = {
+                "help": "https://vm-havsite.github.io/help",
+                "testpage": "https://vm-havsite.github.io/practise_javascript",
+                "arcticles": "https://vm-havsite.github.io/arcticles",
+                "homepage": "https://vm-havsite.github.io/homepage",
+                "download": "https://vm-havsite.github.io/download",
+                "our team": "https://vm-havsite.github.io/our team",
+                "music": "https://vm-havsite.github.io/music",
+                "faq": "https://vm-havsite.github.io/pnf",
+                "contact us": "https://vm-havsite.github.io/pnf",
+                "profiles": "https://vm-havsite.github.io/cst"
+            };
+            if (pages[sbc]) {
+                window.location.href = pages[sbc];
             }
-            if(sbc == "testpage") {
-                window.location.href = "https://vm-havsite.github.io/practise_javascript";
+        }
+        document.getElementById("sb").addEventListener("keypress", function(event) {
+            if (event.key === "Enter") {
+                searchFunction();
             }
-            if(sbc == "arcticles") {
-                window.location.href = "https://vm-havsite.github.io/arcticles";
-            }
-            if(sbc == "homepage") {
-                window.location.href = "https://vm-havsite.github.io/homepage";
-            }
-            if(sbc == "download") {
-                window.location.href = "https://vm-havsite.github.io/download";
-            }
-            if(sbc == "our team") {
-                window.location.href = "https://vm-havsite.github.io/our team";
-            }
-            if(sbc == "music") {
-                window.location.href = "https://vm-havsite.github.io/music";
-            }
-            if(sbc == "FAQ") {
-                window.location.href = "https://vm-havsite.github.io/pnf";
-            }
-            if(sbc == "contact us") {
-                window.location.href = "https://vm-havsite.github.io/pnf";
-            }
-            if(sbc == "profiles") {
-                window.location.href = "https://vm-havsite.github.io/cst";
-            }
-        } 
+        });
     </script>
 </body>
 </html>
