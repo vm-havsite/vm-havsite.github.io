@@ -5,11 +5,22 @@
 <link rel="stylesheet" href="style.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <style>
-body {
+    
+        /* Light mode (default) */
+        :root {
+            --bg-color: #f9f9f9;
+            --text-color: #333;
+        }
+
+        .dark-mode {
+            --bg-color: #222222;
+            --text-color: #ffffff;
+        }
+        body {
             margin: 0;
             font-family: Arial, Helvetica, sans-serif;
-            background-color: #f9f9f9;
-            color: #333;
+            background-color: var(--bg-color);
+            color: var(--text-color);
         }
 
         .topnav {
@@ -150,7 +161,7 @@ body {
         }
 
         footer a {
-            color: #6a11cb;
+            color: #f4e8e8;
             text-decoration: none;
             margin: 0 5px;
         }
@@ -191,7 +202,7 @@ body {
                 </span>
         </a>
         <a href="cst.html">
-          <img src="images/user.png" style="height:30px; with:30px; border-radius:20px; margin-top:0px; ">
+          <img src="images/user.png" style="height:30px; width:30px; border-radius:20px; margin-top:0px; ">
         </a>
         <div class="search-bar">
             <input type="text" id="sb" placeholder="Search...">
@@ -221,6 +232,7 @@ body {
     <li>Young people who experienced trauma or disruptions at home, including divorce and deaths of parents.</li>
 </ul>
 </div>
+<script src="myscript.js"></script>
   <script>
   function myFunction() {
     var x = document.getElementById("myTopnav");

@@ -2,15 +2,31 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0" decription="burnout arcticle">
+<link rel="preconnect" href="https://cdnjs.cloudflare.com">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="icon" type="image/x-icon" href="images/logo_og.png">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" rel="preconnect" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=home" />
 <title>Document</title>
 <style>
+        /* Light mode (default) */
+        :root {
+            --bg-color: #f9f9f9;
+            --text-color: #333;
+            --img-box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .dark-mode {
+            --bg-color: #222222;
+            --text-color: #ffffff;
+            --img-box-shadow: 0 4px 8px rgba(241, 240, 240, 0.438);
+        }
         body {
             margin: 0;
             font-family: Arial, Helvetica, sans-serif;
-            background-color: #f9f9f9;
-            color: #333;
+            background-color: var(--bg-color);
+            color: var(--text-color);
         }
 
         .topnav {
@@ -139,7 +155,7 @@
             max-width: 100%;
             height: auto;
             border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            box-shadow: var(--img-box-shadow);
         }
 
         footer {
@@ -151,7 +167,7 @@
         }
 
         footer a {
-            color: #6a11cb;
+            color: #f4e8e8;
             text-decoration: none;
             margin: 0 5px;
         }

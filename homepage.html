@@ -15,11 +15,13 @@
         :root {
             --bg-color: #f9f9f9;
             --text-color: #333;
+            --img-box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
 
         .dark-mode {
             --bg-color: #222222;
             --text-color: #ffffff;
+            --img-box-shadow: 0 4px 8px rgba(233, 230, 230, 0.5);
         }
         h1::selection {
             background: green;
@@ -163,7 +165,7 @@
             max-width: 100%;
             height: auto;
             border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            box-shadow: var(--img-box-shadow);
         }
 
         footer {
