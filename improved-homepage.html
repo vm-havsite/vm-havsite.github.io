@@ -539,7 +539,7 @@
         <a href="cst.html" title="Profile">
             <img src="images/user.png" style="height:24px; width:24px; border-radius:50%;">
         </a>
-        <button class="theme-toggle" id="themeToggle" title="Toggle theme" onclick="toggleTheme()">
+        <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()">
             <i class="fas fa-moon"></i>
         </button>
         <div class="search-bar">
@@ -640,7 +640,15 @@
     <a href="#" class="back-to-top" id="backToTop">
         <i class="fas fa-arrow-up"></i>
     </a>
-    <script src="myscript.js"></script>
+    <script src="myscript.js">
+	var themedata = Storage.getitem(theme);
+	if(themedata == light){
+	    themeToggle.innerHTML = '<i class="fas fa-moon"></i>';
+	}
+        else{
+	    themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
+	}
+    </script>
     <script>
         // Toggle mobile navigation
         function myFunction() {
@@ -684,19 +692,6 @@
                 backToTopButton.classList.add('visible');
             } else {
                 backToTopButton.classList.remove('visible');
-            }
-        });
-
-        // Theme toggle functionality
-        const themeToggle = document.getElementById('themeToggle');
-        const htmlRoot = document.getElementById('html-root');
-        
-        themeToggle.addEventListener('click', function() {
-            htmlRoot.classList.toggle('dark-mode');
-            if (htmlRoot.classList.contains('dark-mode')) {
-                themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
-            } else {
-                themeToggle.innerHTML = '<i class="fas fa-moon"></i>';
             }
         });
 
