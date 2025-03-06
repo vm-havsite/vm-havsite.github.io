@@ -16,5 +16,6 @@ document.addEventListener('DOMContentLoaded', () => {
       htmlRoot.classList.add('dark-mode');
       localStorage.setItem('theme', 'dark');
     }
+    location.reload();
   }
   
