@@ -547,7 +547,7 @@
             <button onclick="searchFunction()"><i class="fas fa-search"></i></button>
         </div>
         <a href="javascript:void(0);" class="icon" onclick="myFunction()">
-            <i class="fas fa-bars"></i>
+            <i class="fas fa-bars" id="tt"></i>
         </a>
     </div>
 
@@ -643,10 +643,10 @@
     <script src="myscript.js">
 	var themedata = Storage.getitem(theme);
 	if(themedata == light){
-            document.getElementById('themeToggle').innerHTML = '<i class="fas fa-moon"></i>';
+            tt.classlist.replace = ('fas fa-sun','fas fa-moon')
 	}
         else{
-	    document.getElementById('themeToggle').innerHTML = '<i class="fas fa-sun"></i>';
+            tt.classlist.replace = ('fas fa-moon','fas fa-sun')
 	}
     </script>
     <script>
