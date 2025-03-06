@@ -15,7 +15,6 @@ document.addEventListener('DOMContentLoaded', () => {
     } else {
       htmlRoot.classList.add('dark-mode');
       localStorage.setItem('theme', 'dark');
-      document.getElementById('ttcb').checked = true;
     }
   }
   
