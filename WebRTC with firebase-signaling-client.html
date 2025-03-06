@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WebRTC with Firebase</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 20px;
+      background-color: #f0f2f5;
+    }
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    .header {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    .video-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      grid-gap: 20px;
+    }
+    .video-item {
+      background-color: #000;
+      border-radius: 8px;
+      overflow: hidden;
+      position: relative;
+      aspect-ratio: 16/9;
+    }
+    video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .controls {
+      display: flex;
+      justify-content: center;
+      margin: 20px 0;
+      gap: 10px;
+    }
+    button {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      background-color: #4CAF50;
+      color: white;
+      cursor: pointer;
+      font-size: 16px;
+    }
+    button:hover {
+      background-color: #45a049;
+    }
+    button:disabled {
+      background-color: #cccccc;
+      cursor: not-allowed;
+    }
+    input {
+      padding: 10px;
+      font-size: 16px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      margin-right: 10px;
+    }
+    .username {
+      position: absolute;
+      bottom: 10px;
+      left: 10px;
+      background-color: rgba(0, 0, 0, 0.5);
+      color: white;
+      padding: 5px 10px;
+      border-radius: 5px;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>WebRTC Communication</h1>
+      <p>Connect with users in your area</p>
+      
+      <div class="join-controls">
+        <input type="text" id="username-input" placeholder="Your Name">
+        <input type="text" id="room-input" placeholder="Room ID">
+        <button id="join-btn">Join Room</button>
+      </div>
+    </div>
+    
+    <div class="video-container" id="video-container">
+      <div class="video-item">
+        <video id="local-video" autoplay muted playsinline></video>
+        <div class="username">You</div>
+      </div>
+    </div>
+    
+    <div class="controls">
+      <button id="audio-btn">Mute Audio</button>
+      <button id="video-btn">Turn Off Video</button>
+      <button id="leave-btn" disabled>Leave Room</button>
+    </div>
+  </div>
+
+  <!-- Firebase App (the core Firebase SDK) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/firebase/9.6.10/firebase-app-compat.min.js"></script>
+  <!-- Firebase Database -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/firebase/9.6.10/firebase-database-compat.min.js"></script>
+
+  <script>
+    // Your Firebase configuration - REPLACE WITH YOUR ACTUAL CONFIG
+    const firebaseConfig = {
+      apiKey: "AIzaSyAvm9UU913IXMi0sxnRzBDdykw6RIa3RBU",
+      authDomain: "webrtc-chat-ecc4b.firebaseapp.com",
+      databaseURL: "https://webrtc-chat-ecc4b-default-rtdb.asia-southeast1.firebasedatabase.app",
+      projectId: "webrtc-chat-ecc4b",
+      storageBucket: "webrtc-chat-ecc4b.firebasestorage.app",
+      messagingSenderId: "624081002435",
+      appId: "1:624081002435:web:f8c2d1ecb209e5f599a776",
+      measurementId: "G-E254EZLF91"
+    };
+
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    const database = firebase.database();
+    
+    // DOM elements
+    const videoContainer = document.getElementById('video-container');
+    const localVideo = document.getElementById('local-video');
+    const joinBtn = document.getElementById('join-btn');
+    const leaveBtn = document.getElementById('leave-btn');
+    const audioBtn = document.getElementById('audio-btn');
+    const videoBtn = document.getElementById('video-btn');
+    const roomInput = document.getElementById('room-input');
+    const usernameInput = document.getElementById('username-input');
+    
+    // Local variables
+    let localStream;
+    const peers = {};
+    const peerConnections = {};
+    let roomID;
+    let username;
+    let userID;
+    let audioEnabled = true;
+    let videoEnabled = true;
+    
+    // ICE servers configuration (STUN/TURN servers)
+    const iceServers = {
+      iceServers: [
+        { urls: 'stun:stun.l.google.com:19302' },
+        { urls: 'stun:stun1.l.google.com:19302' }
+        // Add your TURN server here if needed
+        // { 
+        //   urls: 'turn:yourturnserver.com:3478',
+        //   username: 'username',
+        //   credential: 'password'
+        // }
+      ]
+    };
+    
+    // Generate a unique ID for this user
+    function generateUserID() {
+      return Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+    }
+    
+    // Generate random room ID if needed
+    function generateRoomID() {
+      return Math.random().toString(36).substring(2, 9);
+    }
+    
+    // Join room
+    joinBtn.addEventListener('click', async () => {
+      roomID = roomInput.value || generateRoomID();
+      username = usernameInput.value || 'Anonymous';
+      userID = generateUserID();
+      
+      if (!roomID) {
+        alert('Please enter a room ID');
+        return;
+      }
+      
+      try {
+        localStream = await navigator.mediaDevices.getUserMedia({ 
+          video: true, 
+          audio: true 
+        });
+        
+        localVideo.srcObject = localStream;
+        
+        // Disable join button and enable leave button
+        joinBtn.disabled = true;
+        leaveBtn.disabled = false;
+        roomInput.disabled = true;
+        usernameInput.disabled = true;
+        
+        // Add user to the room
+        const roomRef = database.ref(`rooms/${roomID}`);
+        const roomSnapshot = await roomRef.once('value');
+        
+        // Check if room exists and has fewer than 10 users
+        if (roomSnapshot.exists()) {
+          const roomData = roomSnapshot.val();
+          const userCount = roomData.users ? Object.keys(roomData.users).length : 0;
+          
+          if (userCount >= 10) {
+            alert('This room is full. Please try another room.');
+            resetUI();
+            return;
+          }
+        }
+        
+        // Add this user to the room
+        const userRef = roomRef.child(`users/${userID}`);
+        userRef.set({
+          username: username,
+          timestamp: firebase.database.ServerValue.TIMESTAMP
+        });
+        
+        // Remove user when they disconnect
+        userRef.onDisconnect().remove();
+        
+        // Listen for other users in the room
+        roomRef.child('users').on('child_added', snapshot => {
+          const newUserID = snapshot.key;
+          
+          // Don't create a connection to yourself
+          if (newUserID === userID) return;
+          
+          console.log(`New user joined: ${newUserID}`);
+          
+          // Create peer connection for the new user
+          createPeerConnection(newUserID);
+          
+          // Create and send offer if you're the initiator
+          // (Determine initiator based on user ID comparison for consistency)
+          if (userID < newUserID) {
+            createOffer(newUserID);
+          }
+        });
+        
+        // Listen for users leaving the room
+        roomRef.child('users').on('child_removed', snapshot => {
+          const departedUserID = snapshot.key;
+          
+          console.log(`User left: ${departedUserID}`);
+          
+          // Clean up peer connection
+          if (peerConnections[departedUserID]) {
+            peerConnections[departedUserID].close();
+            delete peerConnections[departedUserID];
+          }
+          
+          // Remove video element
+          const videoItem = document.getElementById(`video-item-${departedUserID}`);
+          if (videoItem) {
+            videoItem.remove();
+          }
+        });
+        
+        // Listen for signaling messages
+        listenForSignals();
+        
+      } catch (err) {
+        console.error('Error accessing media devices:', err);
+        alert('Could not access camera or microphone. Please check permissions.');
+      }
+    });
+    
+    // Create a peer connection for a specific user
+    function createPeerConnection(remoteUserID) {
+      console.log(`Creating peer connection to ${remoteUserID}`);
+      
+      const peerConnection = new RTCPeerConnection(iceServers);
+      peerConnections[remoteUserID] = peerConnection;
+      
+      // Add local tracks to the connection
+      localStream.getTracks().forEach(track => {
+        peerConnection.addTrack(track, localStream);
+      });
+      
+      // Handle ICE candidates
+      peerConnection.onicecandidate = event => {
+        if (event.candidate) {
+          // Send ICE candidate to the remote peer
+          const candidateRef = database.ref(`rooms/${roomID}/candidates/${userID}_${remoteUserID}`);
+          candidateRef.push({
+            type: 'candidate',
+            candidate: event.candidate.toJSON(),
+            timestamp: firebase.database.ServerValue.TIMESTAMP
+          });
+        }
+      };
+      
+      // Handle connection state changes
+      peerConnection.onconnectionstatechange = event => {
+        console.log(`Connection state to ${remoteUserID}: ${peerConnection.connectionState}`);
+      };
+      
+      // Handle incoming tracks
+      peerConnection.ontrack = event => {
+        console.log(`Received track from ${remoteUserID}`);
+        
+        // Check if we already have a video for this peer
+        const existingVideo = document.getElementById(`remote-video-${remoteUserID}`);
+        if (!existingVideo) {
+          const videoItem = document.createElement('div');
+          videoItem.className = 'video-item';
+          videoItem.id = `video-item-${remoteUserID}`;
+          
+          const video = document.createElement('video');
+          video.id = `remote-video-${remoteUserID}`;
+          video.autoplay = true;
+          video.playsInline = true;
+          video.srcObject = event.streams[0];
+          
+          const usernameDiv = document.createElement('div');
+          usernameDiv.className = 'username';
+          usernameDiv.textContent = `User ${remoteUserID.substring(0, 5)}`;
+          
+          videoItem.appendChild(video);
+          videoItem.appendChild(usernameDiv);
+          videoContainer.appendChild(videoItem);
+        }
+      };
+      
+      return peerConnection;
+    }
+    
+    // Create and send offer to a remote peer
+    async function createOffer(remoteUserID) {
+      try {
+        const peerConnection = peerConnections[remoteUserID];
+        
+        // Create offer
+        const offer = await peerConnection.createOffer();
+        await peerConnection.setLocalDescription(offer);
+        
+        // Send offer to remote peer via Firebase
+        const offerRef = database.ref(`rooms/${roomID}/offers/${userID}_${remoteUserID}`);
+        await offerRef.set({
+          type: 'offer',
+          sdp: peerConnection.localDescription.toJSON(),
+          timestamp: firebase.database.ServerValue.TIMESTAMP
+        });
+        
+        console.log(`Sent offer to ${remoteUserID}`);
+      } catch (error) {
+        console.error('Error creating offer:', error);
+      }
+    }
+    
+    // Handle incoming offers and create answers
+    async function handleOffer(remoteUserID, offer) {
+      try {
+        console.log(`Received offer from ${remoteUserID}`);
+        
+        // Create peer connection if it doesn't exist
+        if (!peerConnections[remoteUserID]) {
+          createPeerConnection(remoteUserID);
+        }
+        
+        const peerConnection = peerConnections[remoteUserID];
+        
+        // Set remote description
+        await peerConnection.setRemoteDescription(new RTCSessionDescription(offer.sdp));
+        
+        // Create answer
+        const answer = await peerConnection.createAnswer();
+        await peerConnection.setLocalDescription(answer);
+        
+        // Send answer to remote peer via Firebase
+        const answerRef = database.ref(`rooms/${roomID}/answers/${userID}_${remoteUserID}`);
+        await answerRef.set({
+          type: 'answer',
+          sdp: peerConnection.localDescription.toJSON(),
+          timestamp: firebase.database.ServerValue.TIMESTAMP
+        });
+        
+        console.log(`Sent answer to ${remoteUserID}`);
+      } catch (error) {
+        console.error('Error handling offer:', error);
+      }
+    }
+    
+    // Handle incoming answers
+    async function handleAnswer(remoteUserID, answer) {
+      try {
+        console.log(`Received answer from ${remoteUserID}`);
+        
+        const peerConnection = peerConnections[remoteUserID];
+        
+        if (peerConnection && answer) {
+          await peerConnection.setRemoteDescription(new RTCSessionDescription(answer.sdp));
+        }
+      } catch (error) {
+        console.error('Error handling answer:', error);
+      }
+    }
+    
+    // Handle incoming ICE candidates
+    async function handleCandidate(remoteUserID, candidate) {
+      try {
+        console.log(`Received ICE candidate from ${remoteUserID}`);
+        
+        const peerConnection = peerConnections[remoteUserID];
+        
+        if (peerConnection && candidate) {
+          await peerConnection.addIceCandidate(new RTCIceCandidate(candidate));
+        }
+      } catch (error) {
+        console.error('Error handling ICE candidate:', error);
+      }
+    }
+    
+    // Listen for signaling messages
+    function listenForSignals() {
+      // Listen for offers
+      const offersRef = database.ref(`rooms/${roomID}/offers`);
+      offersRef.on('child_added', snapshot => {
+        const signalData = snapshot.val();
+        const signalKey = snapshot.key;
+        
+        // Check if this offer is meant for current user
+        const [senderID, receiverID] = signalKey.split('_');
+        
+        if (receiverID === userID) {
+          handleOffer(senderID, signalData);
+          // Remove the offer after handling
+          snapshot.ref.remove();
+        }
+      });
+      
+      // Listen for answers
+      const answersRef = database.ref(`rooms/${roomID}/answers`);
+      answersRef.on('child_added', snapshot => {
+        const signalData = snapshot.val();
+        const signalKey = snapshot.key;
+        
+        // Check if this answer is meant for current user
+        const [senderID, receiverID] = signalKey.split('_');
+        
+        if (receiverID === userID) {
+          handleAnswer(senderID, signalData);
+          // Remove the answer after handling
+          snapshot.ref.remove();
+        }
+      });
+      
+      // Listen for ICE candidates
+      const candidatesRef = database.ref(`rooms/${roomID}/candidates`);
+      candidatesRef.on('child_added', snapshot => {
+        const signalKey = snapshot.key;
+        
+        // Process all candidates for this connection
+        snapshot.forEach(candidateSnapshot => {
+          const candidateData = candidateSnapshot.val();
+          
+          // Check if this candidate is meant for current user
+          const [senderID, receiverID] = signalKey.split('_');
+          
+          if (receiverID === userID) {
+            handleCandidate(senderID, candidateData.candidate);
+            // Remove the candidate after handling
+            candidateSnapshot.ref.remove();
+          }
+        });
+      });
+    }
+    
+    // Handle audio mute/unmute
+    audioBtn.addEventListener('click', () => {
+      audioEnabled = !audioEnabled;
+      localStream.getAudioTracks().forEach(track => {
+        track.enabled = audioEnabled;
+      });
+      audioBtn.textContent = audioEnabled ? 'Mute Audio' : 'Unmute Audio';
+    });
+    
+    // Handle video on/off
+    videoBtn.addEventListener('click', () => {
+      videoEnabled = !videoEnabled;
+      localStream.getVideoTracks().forEach(track => {
+        track.enabled = videoEnabled;
+      });
+      videoBtn.textContent = videoEnabled ? 'Turn Off Video' : 'Turn On Video';
+    });
+    
+    // Reset UI and state
+    function resetUI() {
+      // Stop all tracks in local stream
+      if (localStream) {
+        localStream.getTracks().forEach(track => track.stop());
+      }
+      
+      joinBtn.disabled = false;
+      leaveBtn.disabled = true;
+      roomInput.disabled = false;
+      usernameInput.disabled = false;
+      localVideo.srcObject = null;
+    }
+    
+    // Handle leaving room
+    leaveBtn.addEventListener('click', () => {
+      leaveRoom();
+    });
+    
+    // Leave room and clean up
+    function leaveRoom() {
+      if (roomID && userID) {
+        // Remove user from Firebase
+        const userRef = database.ref(`rooms/${roomID}/users/${userID}`);
+        userRef.remove();
+        
+        // Clear all listeners
+        database.ref(`rooms/${roomID}/offers`).off();
+        database.ref(`rooms/${roomID}/answers`).off();
+        database.ref(`rooms/${roomID}/candidates`).off();
+        database.ref(`rooms/${roomID}/users`).off();
+        
+        // Close all peer connections
+        Object.values(peerConnections).forEach(connection => {
+          if (connection) {
+            connection.close();
+          }
+        });
+        
+        // Clear peer connections
+        peerConnections = {};
+        
+        // Clear video container except local video
+        const remoteVideos = document.querySelectorAll('.video-item:not(:first-child)');
+        remoteVideos.forEach(video => video.remove());
+        
+        resetUI();
+      }
+    }
+    
+    // Handle page unload
+    window.addEventListener('beforeunload', () => {
+      leaveRoom();
+    });
+  </script>
+</body>
+</html>
