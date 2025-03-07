@@ -329,6 +329,21 @@
   const account = new Account(client);
 </script>
 
+<script>
+  async function registerUser(email, password, name) {
+    try {
+      const user = await account.create('unique()', email, password, name);
+      alert('🎉 Registration successful! Welcome, ' + name + '!');
+
+      // Optionally redirect to a welcome or login page
+      window.location.href = 'homepage.html'; // Change the URL as needed
+    } catch (error) {
+      console.error('Registration failed:', error.message);
+      alert('❌ Registration failed: ' + error.message);
+    }
+  }
+</script>
+
 
 
 
