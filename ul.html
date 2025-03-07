@@ -61,30 +61,53 @@
         <p>© 2024 by Havsite | Privacy Policy | Terms of Service</p>
     </footer>
 
+    <script src="https://cdn.jsdelivr.net/npm/appwrite@12.0.0"></script>
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
+        const appwrite = new Appwrite();
+        appwrite
+            .setEndpoint('https://YOUR-APPWRITE-ENDPOINT')
+            .setProject('YOUR-PROJECT-ID');
+
+        document.addEventListener('DOMContentLoaded', async () => {
             const email = getCookie('email');
             const username = getCookie('username');
             if (email && username) {
                 showWelcome(username);
+            } else {
+                try {
+                    const user = await appwrite.account.get();
+                    showWelcome(user.name || user.email.split('@')[0]);
+                } catch (error) {
+                    console.log('No active Appwrite session');
+                }
             }
         });
 
-        function loginUser() {
+        async function loginUser() {
             const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
-            const username = email.split('@')[0]; // Mock username from email
+            const username = email.split('@')[0];
 
             if (email && password) {
-                document.cookie = `email=${email}; path=/`;
-                document.cookie = `username=${username}; path=/`;
-                showWelcome(username);
+                try {
+                    await appwrite.account.createEmailSession(email, password);
+                    document.cookie = `email=${email}; path=/`;
+                    document.cookie = `username=${username}; path=/`;
+                    showWelcome(username);
+                } catch (error) {
+                    alert('Invalid credentials');
+                }
             } else {
                 alert('Invalid credentials');
             }
         }
 
-        function logoutUser() {
+        async function logoutUser() {
+            try {
+                await appwrite.account.deleteSession('current');
+            } catch (error) {
+                console.log('Failed to logout from Appwrite');
+            }
             document.cookie = 'email=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/';
             document.cookie = 'username=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/';
             document.getElementById('auth-container').classList.remove('hidden');
