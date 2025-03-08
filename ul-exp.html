@@ -404,6 +404,71 @@
         <p class="login-link">Already have an account? <a onclick="toggleForms()">Login</a></p>
     </div>
       <script type="module" src="appwrite-auth.js"></script>
+    <!-- Include external JS file -->
+    <script src="myscript.js"></script>
+    
+    <script>
+        // Toggle mobile navigation
+        function myFunction() {
+            var x = document.getElementById("myTopnav");
+            if (x.className === "topnav") {
+                x.className += " responsive";
+            } else {
+                x.className = "topnav";
+            }
+        }
+
+        // Search functionality
+        function searchFunction() {
+            var searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            const pages = {
+                "help": "https://vm-havsite.github.io/help",
+                "testpage": "https://vm-havsite.github.io/practise_javascript",
+                "arcticles": "https://vm-havsite.github.io/arcticles",
+                "homepage": "https://vm-havsite.github.io/homepage",
+                "download": "https://vm-havsite.github.io/download",
+                "our team": "https://vm-havsite.github.io/our team",
+                "team": "https://vm-havsite.github.io/our team",
+                "music": "https://vm-havsite.github.io/music",
+                "faq": "https://vm-havsite.github.io/pnf",
+                "contact": "https://vm-havsite.github.io/pnf",
+                "contact us": "https://vm-havsite.github.io/pnf",
+                "profiles": "https://vm-havsite.github.io/cst"
+            };
+            
+            if (pages[searchTerm]) {
+                window.location.href = pages[searchTerm];
+            } else {
+                alert("No results found for: " + searchTerm);
+            }
+        }
+
+        // Back to top button functionality
+        window.addEventListener('scroll', function() {
+            var backToTopButton = document.getElementById('backToTop');
+            if (window.pageYOffset > 300) {
+                backToTopButton.classList.add('visible');
+            } else {
+                backToTopButton.classList.remove('visible');
+            }
+        });
+
+        // Enable Enter key for search
+        document.getElementById("searchInput").addEventListener("keypress", function(event) {
+            if (event.key === "Enter") {
+                searchFunction();
+            }
+        });
+        
+        // Update theme toggle icon on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            if (document.getElementById('html-root').classList.contains('dark-mode')) {
+                document.getElementById('themeToggle').innerHTML = '<i class="fas fa-sun"></i>';
+            } else {
+                document.getElementById('themeToggle').innerHTML = '<i class="fas fa-moon"></i>';
+            }
+        });
+    </script>
     <script>
         function toggleForms() {
             const loginContainer = document.getElementById('loginContainer');
