@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="english" id="html-root">
+<head>
+    <title>Havsite - Home</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Havsite - Connect with classmates and access the latest updates">
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="icon" type="image/x-icon" href="images/logo_og.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap">
+    <style>
+        :root {
+            --primary-gradient: linear-gradient(45deg, #6a11cb, #2575fc);
+            --bg-color: #f9f9f9;
+            --text-color: #333;
+            --card-bg: #ffffff;
+        }
+
+        .dark-mode {
+            --bg-color: #121212;
+            --text-color: #f1f1f1;
+            --card-bg: #1e1e1e;
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Poppins', Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+    </style>
+</head>
+<body>
+    <div class="topnav" id="myTopnav">
+        <a href="about tech bro.html" class="logo">
+            <img src="images/logo_og.png" alt="Havsite Logo" height="40" width="40" style="border-radius: 8px;">
+        </a>
+        <a href="help.html">Help</a>
+        <a href="pnf.html">Contact</a>
+        <a href="pnf.html">FAQ</a>
+        <a href="arcticles.html">Articles</a>
+        <a href="practise_javascript.html">Testpage</a>
+        <a href="our team.html">Team</a>
+        <a href="download.html">Download</a>
+        <a href="hompage(1).html">
+            <span class="material-symbols-outlined">home</span>
+        </a>
+        <button class="theme-toggle" id="themeToggle" title="Toggle theme" onclick="toggleTheme()">
+            <i class="fas fa-moon"></i>
+        </button>
+    </div>
+
+    <footer>
+        <p>© 2024 by Havsite | Privacy Policy | Terms of Service</p>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/appwrite/12.0.0/appwrite.min.js"></script>
+    <script>
+        const appwrite = new Appwrite();
+        appwrite.setEndpoint('https://[YOUR-ENDPOINT]').setProject('[YOUR-PROJECT-ID]');
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            try {
+                const prefs = await appwrite.account.getPrefs();
+                if (prefs.theme === 'dark') {
+                    document.getElementById('html-root').classList.add('dark-mode');
+                    document.getElementById('themeToggle').innerHTML = '<i class="fas fa-sun"></i>';
+                }
+            } catch (error) {
+                console.log('No Appwrite session found');
+            }
+        });
+
+        async function toggleTheme() {
+            const root = document.getElementById('html-root');
+            const isDark = root.classList.toggle('dark-mode');
+            document.getElementById('themeToggle').innerHTML = isDark
+                ? '<i class="fas fa-sun"></i>'
+                : '<i class="fas fa-moon"></i>';
+
+            try {
+                await appwrite.account.updatePrefs({ theme: isDark ? 'dark' : 'light' });
+            } catch (error) {
+                console.error('Failed to save theme preference:', error);
+            }
+        }
+    </script>
+</body>
+</html>
