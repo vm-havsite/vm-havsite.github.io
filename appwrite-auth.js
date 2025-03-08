@@ -45,6 +45,18 @@ async function signin() {
   }
 }
 
+//logout
+async function logout() {
+    try {
+        await account.deleteSession('current');
+        alert('Logged out successfully!');
+    } catch (error) {
+        alert('Logout failed: ' + error.message);
+    }
+}
+
+
 // Event listeners
 document.getElementById('signup-btn').addEventListener('click', signup);
 document.getElementById('signin-btn').addEventListener('click', signin);
+document.getElementById('signin-btn').addEventListener('click', logout);
