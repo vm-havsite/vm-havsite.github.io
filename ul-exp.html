@@ -154,7 +154,7 @@
         top: 0;
         height:max-content;
         z-index: 1000;
-        width:100vh;
+        width:100%;
         padding: 0 20px;
     }
 
@@ -322,11 +322,6 @@
             box-sizing: border-box;
         }
     }
-
-.formdiv{
-	justify-content:center;
-	align-items:center;
-    }
     </style>
 </head>
 <body>
@@ -358,7 +353,7 @@
             <i class="fas fa-bars"></i>
         </a>
     </div>
- <div class="formdiv">
+
     <!-- Login Form -->
     <div class="form-container active" id="loginContainer">
         <h1>Hi, Welcome Back!</h1>
@@ -406,7 +401,7 @@
 
         <p class="login-link">Already have an account? <a onclick="toggleForms()">Login</a></p>
     </div>
-</div>
+
       <script type="module" src="appwrite-auth.js"></script>
     <!-- Include external JS file -->
     <script src="myscript.js"></script>
