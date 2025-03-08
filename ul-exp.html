@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Auth Portal</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Arial', sans-serif;
+        }
+
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: #f0f2f5;
+        }
+
+        .form-container {
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+            position: absolute;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .form-container.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        h1 {
+            margin-bottom: 1rem;
+            color: #1a1a1a;
+        }
+
+        .subtitle {
+            color: #65676b;
+            margin-bottom: 2rem;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+            text-align: left;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #65676b;
+            font-weight: 500;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #dddfe2;
+            border-radius: 6px;
+            font-size: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .options {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 1rem 0;
+        }
+
+        a {
+            color: #1877f2;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 6px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .primary-btn {
+            background: #1877f2;
+            color: white;
+        }
+
+        .primary-btn:hover {
+            background: #166fe5;
+        }
+    </style>
+</head>
+<body>
+    <!-- Login Form -->
+    <div class="form-container active" id="loginContainer">
+        <h1>Hi, Welcome Back!</h1>
+        <p class="subtitle">Please sign in to continue</p>
+
+        <form id="loginForm">
+            <div class="form-group">
+                <label for="signin-email">Email</label>
+                <input id="signin-email" type="email" placeholder="example@gmail.com" required>
+            </div>
+
+            <div class="form-group">
+                <label for="signin-password">Password</label>
+                <input id="signin-password" type="password" placeholder="Enter Your Password" required>
+            </div>
+
+                <a>Forgot Password?</a>
+            </div>
+
+            <button class="primary-btn" type="submit">Login</button>
+        </form>
+
+        <p>Don't have an account? <a onclick="toggleForms()">Sign Up</a></p>
+    </div>
+
+    <!-- Signup Form -->
+    <div class="form-container" id="signupContainer">
+        <h1>Create an account</h1>
+        <p class="subtitle">Connect with your friends today!</p>
+
+        <form id="signupForm">
+            <div class="form-group">
+                <input type="text" id="signup-name" placeholder="Enter Your Username" required>
+            </div>
+            <div class="form-group">
+                <input type="email" id="signup-email" placeholder="Enter Your Email" required>
+            </div>
+            <div class="form-group">
+                <input type="password" id="signup-password" placeholder="Enter Your Password" required>
+            </div>
+            <button class="primary-btn" type="submit">Sign Up</button>
+        </form>
+
+        <p class="login-link">Already have an account? <a onclick="toggleForms()">Login</a></p>
+    </div>
+      <script type="module" src="appwrite-auth.js"></script>
+    <script>
+        function toggleForms() {
+            const loginContainer = document.getElementById('loginContainer');
+            const signupContainer = document.getElementById('signupContainer');
+            
+            loginContainer.classList.toggle('active');
+            signupContainer.classList.toggle('active');
+        }
+
+        // Login Form Handling
+        document.getElementById('loginForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+
+            if(email && password) {
+                alert('Login successful!');
+            } else {
+                alert('Please fill in all fields');
+            }
+        });
+
+        // Signup Form Handling
+        document.getElementById('signupForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const username = document.querySelector('#signupForm input[type="text"]').value;
+            const email = document.querySelector('#signupForm input[type="email"]').value;
+            const phone = document.querySelector('#signupForm input[type="tel"]').value;
+            const password = document.querySelector('#signupForm input[type="password"]').value;
+
+            if(username && email && phone && password) {
+                alert('Account created successfully!');
+            } else {
+                alert('Please fill in all fields');
+            }
+        });
+    </script>
+</body>
+</html>
