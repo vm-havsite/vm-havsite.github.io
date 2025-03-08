@@ -129,6 +129,8 @@
             </div>
 
                 <a>Forgot Password?</a>
+<button class="primary-btn" onclick="logout()">Logout</button>
+
             </div>
 
             <button class="primary-btn" type="submit" id="signin-btn">Login</button>
@@ -158,6 +160,15 @@
         <p class="login-link">Already have an account? <a onclick="toggleForms()">Login</a></p>
     </div>
       <script type="module" src="appwrite-auth.js"></script>
+	<script>async function logout() {
+    try {
+        await account.deleteSession('current');
+        alert('Logged out successfully!');
+    } catch (error) {
+        alert('Logout failed: ' + error.message);
+    }
+}
+</script>
     <script>
         function toggleForms() {
             const loginContainer = document.getElementById('loginContainer');
