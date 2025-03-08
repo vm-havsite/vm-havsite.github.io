@@ -38,7 +38,7 @@ async function signin() {
   }
 
   try {
-    await account.createEmailPasswordSession(email, password);
+    await account.createEmailSession(email, password);
     alert('Signin successful!');
   } catch (error) {
     alert('Signin failed: ' + error.message);
