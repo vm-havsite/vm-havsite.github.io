@@ -3,8 +3,8 @@ import { Client, Account } from 'https://cdn.jsdelivr.net/npm/appwrite@12.0.0/+e
 // Initialize Appwrite client
 const client = new Client();
 client
-  .setEndpoint('https://YOUR-APPWRITE-ENDPOINT') // Replace with your Appwrite endpoint
-  .setProject('YOUR-PROJECT-ID'); // Replace with your Appwrite project ID
+  .setEndpoint('https://cloud.appwrite.io/v1') // Replace with your Appwrite endpoint
+  .setProject('havsite-user-login-0'); // Replace with your Appwrite project ID
 
 const account = new Account(client);
 
