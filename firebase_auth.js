@@ -55,6 +55,8 @@ onAuthStateChanged(auth, (user) => {
     }
 });
 
+export { signUp, signIn, signOutUser };
+
 // Example usage
 // signUp('test@example.com', 'password123');
 // signIn('test@example.com', 'password123');
