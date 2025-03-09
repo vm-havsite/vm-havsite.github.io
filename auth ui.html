@@ -16,48 +16,45 @@
     <h2>Firebase Chat App</h2>
 
     <h3>Signup</h3>
-<form id="signup-form">
-    <input type="email" id="signup-email" placeholder="Email" required>
-    <input type="password" id="signup-password" placeholder="Password" required>
-    <button type="submit">Sign Up</button>
-</form>
+    <form id="signup-form">
+        <input type="text" id="signup-username" placeholder="Username" required>
+        <input type="email" id="signup-email" placeholder="Email" required>
+        <input type="password" id="signup-password" placeholder="Password" required>
+        <button type="submit">Sign Up</button>
+    </form>
 
-<form id="signin-form">
-    <input type="email" id="signin-email" placeholder="Email" required>
-    <input type="password" id="signin-password" placeholder="Password" required>
-    <button type="submit">Sign In</button>
-</form>
+    <h3>Signin</h3>
+    <form id="signin-form">
+        <input type="email" id="signin-email" placeholder="Email" required>
+        <input type="password" id="signin-password" placeholder="Password" required>
+        <button type="submit">Sign In</button>
+    </form>
 
-<button id="signout-button">Sign Out</button>
+    <button id="signout-button">Sign Out</button>
 
+    <script type="module">
+        import { signUp, signIn, signOutUser } from './firebase_auth.js';
 
-    <script type="module" src="firebase_auth.js"></script>
-<script type="module">
-    import { signUp, signIn, signOutUser } from './firebase_auth.js';
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('signup-form').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const username = document.getElementById('signup-username').value;
+                const email = document.getElementById('signup-email').value;
+                const password = document.getElementById('signup-password').value;
+                await signUp(email, password, username);
+            });
 
-    document.addEventListener('DOMContentLoaded', () => {
-        document.getElementById('signup-form').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const email = document.getElementById('signup-email').value;
-            const password = document.getElementById('signup-password').value;
-            await signUp(email, password);
+            document.getElementById('signin-form').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const email = document.getElementById('signin-email').value;
+                const password = document.getElementById('signin-password').value;
+                await signIn(email, password);
+            });
+
+            document.getElementById('signout-button').addEventListener('click', async () => {
+                await signOutUser();
+            });
         });
-
-        document.getElementById('signin-form').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const email = document.getElementById('signin-email').value;
-            const password = document.getElementById('signin-password').value;
-            await signIn(email, password);
-        });
-
-        document.getElementById('signout-button').addEventListener('click', async () => {
-            await signOutUser();
-        });
-    });
-</script>
-
-</script>
-
-
+    </script>
 </body>
 </html>
