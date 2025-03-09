@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Firebase Chat Auth</title>
+    <style>
+        body { font-family: Arial, sans-serif; display: flex; flex-direction: column; align-items: center; gap: 20px; margin-top: 50px; }
+        form { display: flex; flex-direction: column; gap: 10px; }
+        input { padding: 8px; width: 200px; }
+        button { padding: 8px 12px; background: #4CAF50; color: white; border: none; cursor: pointer; }
+        button:hover { background: #45a049; }
+    </style>
+</head>
+<body>
+    <h2>Firebase Chat App</h2>
+
+    <h3>Signup</h3>
+    <form onsubmit="event.preventDefault(); handleSignup();">
+        <input type="email" id="signup-email" placeholder="Email" required>
+        <input type="password" id="signup-password" placeholder="Password" required>
+        <button type="submit">Sign Up</button>
+    </form>
+
+    <h3>Signin</h3>
+    <form onsubmit="event.preventDefault(); handleSignin();">
+        <input type="email" id="signin-email" placeholder="Email" required>
+        <input type="password" id="signin-password" placeholder="Password" required>
+        <button type="submit">Sign In</button>
+    </form>
+
+    <h3>Signout</h3>
+    <button onclick="handleSignout()">Sign Out</button>
+
+    <script type="module" src="firebase_auth.js"></script>
+    <script>
+        async function handleSignup() {
+            const email = document.getElementById('signup-email').value;
+            const password = document.getElementById('signup-password').value;
+            await signUp(email, password);
+        }
+
+        async function handleSignin() {
+            const email = document.getElementById('signin-email').value;
+            const password = document.getElementById('signin-password').value;
+            await signIn(email, password);
+        }
+
+        async function handleSignout() {
+            await signOutUser();
+        }
+    </script>
+</body>
+</html>
