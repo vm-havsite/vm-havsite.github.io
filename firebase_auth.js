@@ -2,7 +2,6 @@
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js';
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js';
 
-const firebaseConfig = {
   const firebaseConfig = {
     apiKey: "AIzaSyDlQ_JWAToYyuintCnpzJQeURXq-p9C9XI",
     authDomain: "havsite-login-and-chat.firebaseapp.com",
@@ -11,7 +10,6 @@ const firebaseConfig = {
     messagingSenderId: "116998302820",
     appId: "1:116998302820:web:0c67e8f1b6bc9a8f200371",
   };
-};
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
