@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat App</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: Arial, sans-serif; }
+        body { display: flex; flex-direction: column; align-items: center; min-height: 100vh; background: #f0f2f5; }
+        .form-container, #chat-window { background: white; padding: 2rem; border-radius: 10px; box-shadow: 0 0 20px rgba(0,0,0,0.1); width: 100%; max-width: 400px; text-align: center; margin: 1rem 0; }
+        input, button { width: 100%; padding: 12px; margin: 0.5rem 0; border-radius: 6px; }
+        button { background: #1877f2; color: white; border: none; cursor: pointer; }
+        button:hover { background: #166fe5; }
+        #messages { border: 1px solid #ddd; height: 200px; overflow-y: auto; margin: 1rem 0; padding: 1rem; }
+        #user-list li { cursor: pointer; color: #1877f2; }
+    </style>
+</head>
+<body>
+    <div class="form-container" id="signup-container">
+        <h2>Sign Up</h2>
+        <input type="text" id="signup-name" placeholder="Username" required>
+        <input type="email" id="signup-email" placeholder="Email" required>
+        <input type="password" id="signup-password" placeholder="Password" required>
+        <button onclick="signup()">Sign Up</button>
+    </div>
+
+    <div class="form-container" id="login-container">
+        <h2>Login</h2>
+        <input type="email" id="signin-email" placeholder="Email" required>
+        <input type="password" id="signin-password" placeholder="Password" required>
+        <button onclick="signin()">Login</button>
+        <button onclick="logout()">Logout</button>
+    </div>
+
+    <input type="text" id="search-input" placeholder="Search users..." oninput="searchUsers()">
+    <ul id="user-list"></ul>
+
+    <div id="chat-window" style="display: none;">
+        <h3 id="chat-title"></h3>
+        <div id="messages"></div>
+        <input type="text" id="chat-message" placeholder="Type a message...">
+        <button onclick="sendMessage()">Send</button>
+        <button onclick="closeChat()">Close Chat</button>
+    </div>
+
+    <script type="module">
+        import { Client, Account, Databases, ID, Realtime } from 'https://cdn.jsdelivr.net/npm/appwrite@12.0.0/+esm';
+
+        const client = new Client();
+        client.setEndpoint('https://cloud.appwrite.io/v1').setProject('havsite-user-login-0');
+
+        const account = new Account(client);
+        const databases = new Databases(client);
+        const realtime = new Realtime(client);
+
+        async function signup() {
+            const username = document.getElementById('signup-name').value;
+            const email = document.getElementById('signup-email').value;
+            const password = document.getElementById('signup-password').value;
+
+            try {
+                const user = await account.create(ID.unique(), email, password, username);
+                await databases.createDocument('app_data', 'users', ID.unique(), { username, userId: user.$id });
+                alert('Signup successful!');
+            } catch (error) {
+                alert('Signup failed: ' + error.message);
+            }
+        }
+
+        async function signin() {
+            const email = document.getElementById('signin-email').value;
+            const password = document.getElementById('signin-password').value;
+
+            try {
+                await account.createEmailSession(email, password);
+                alert('Login successful!');
+            } catch (error) {
+                alert('Signin failed: ' + error.message);
+            }
+        }
+
+        async function logout() {
+            try {
+                await account.deleteSession('current');
+                alert('Logged out successfully!');
+            } catch (error) {
+                alert('Logout failed: ' + error.message);
+            }
+        }
+
+        async function searchUsers() {
+            const query = document.getElementById('search-input').value;
+            if (!query) return (document.getElementById('user-list').innerHTML = '');
+
+            try {
+                const response = await databases.listDocuments('app_data', 'users', [`query.startsWith("username", "${query}")`]);
+                const userList = document.getElementById('user-list');
+                userList.innerHTML = '';
+                response.documents.forEach(user => {
+                    const li = document.createElement('li');
+                    li.textContent = user.username;
+                    li.onclick = () => startChat(user.username, user.userId);
+                    userList.appendChild(li);
+                });
+            } catch (error) {
+                console.log('Search failed:', error.message);
+            }
+        }
+
+        let currentReceiver = '';
+
+        function startChat(username, userId) {
+            currentReceiver = userId;
+            document.getElementById('chat-title').textContent = `Chat with ${username}`;
+            document.getElementById('chat-window').style.display = 'block';
+            loadMessages(userId);
+        }
+
+        async function sendMessage() {
+            const text = document.getElementById('chat-message').value;
+            const currentUser = await account.get();
+
+            if (!text) return;
+
+            try {
+                await databases.createDocument('app_data', 'messages', ID.unique(), { text, sender: currentUser.$id, receiver: currentReceiver, timestamp: Date.now() });
+                document.getElementById('chat-message').value = '';
+            } catch (error) {
+                alert('Failed to send message: ' + error.message);
+            }
+        }
+
+        async function loadMessages(receiverId) {
+            const currentUser = await account.get();
+            const response = await databases.listDocuments('app_data', 'messages', []);
+
+            const messagesDiv = document.getElementById('messages');
+            messagesDiv.innerHTML = '';
+            response.documents.forEach(message => {
+                const time = new Date(message.timestamp).toLocaleString('en-IN', { day: 'numeric', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit', hour12: true });
+                const div = document.createElement('div');
+                div.innerHTML = `<strong>${message.sender === currentUser.$id ? 'You' : 'Them'}:</strong> ${message.text} <span style="color: #888; font-size: 0.8rem;">(${time})</span>`;
+                messagesDiv.appendChild(div);
+            });
+        }
+
+        function closeChat() {
+            document.getElementById('chat-window').style.display = 'none';
+            document.getElementById('messages').innerHTML = '';
+            currentReceiver = '';
+        }
+    </script>
+</body>
+</html>
