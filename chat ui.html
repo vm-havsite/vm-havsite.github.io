@@ -27,7 +27,7 @@
     </form>
 
     <script type="module">
-        import { sendMessage, listenForMessages, deleteMessage } from './chat.js';
+        import { sendMessage, listenForMessages, deleteMessage, getChatId } from './chat.js';
         import { checkAuthState } from './firebase_auth.js';
 
         let username = '';
@@ -58,6 +58,7 @@
 
             contactsSelect.addEventListener('change', (e) => {
                 currentChat = e.target.value;
+                console.log('Current Chat:', currentChat); // Debugging
                 listenForMessages(username, currentChat, displayMessages); // Pass username and currentChat
             });
         }
@@ -78,6 +79,7 @@
             e.preventDefault();
             const messageInput = document.getElementById('message-input');
             const message = messageInput.value;
+            console.log('Sending message:', message, 'to', currentChat); // Debugging
             if (message && currentChat) {
                 await sendMessage(username, currentChat, message);
                 messageInput.value = '';
