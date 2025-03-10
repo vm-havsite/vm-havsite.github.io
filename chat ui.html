@@ -16,7 +16,7 @@
         h2 {
             color: #333;
         }
-        select, #chatWindow {
+        select, #chatWindow, #messageInput, button {
             width: 80%;
             max-width: 400px;
             padding: 10px;
@@ -29,13 +29,25 @@
             background-color: #fff;
             overflow-y: auto;
         }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
     </style>
     <script type="module">
         import { getAuth, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js';
-        import { getFirestore, doc, getDoc, collection, getDocs } from 'https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js';
+        import { getFirestore, doc, getDoc, collection, getDocs, addDoc } from 'https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js';
         import { app, db } from './firebase_auth.js';
 
         const auth = getAuth(app);
+
+        let username = '';
+        let currentChat = '';
 
         // Check auth state
         onAuthStateChanged(auth, async (user) => {
@@ -44,7 +56,8 @@
                 const userDoc = await getDoc(doc(db, "users", user.uid));
                 if (userDoc.exists()) {
                     const userData = userDoc.data();
-                    console.log("User data:", userData);
+                    username = userData.username;
+                    console.log("Username:", username);
                     loadContacts();
                 } else {
                     console.error("User data not found:", userDoc);
@@ -64,13 +77,43 @@
                 querySnapshot.forEach((doc) => {
                     const userData = doc.data();
                     let option = document.createElement("option");
-                    option.value = doc.id;
+                    option.value = userData.username;
                     option.textContent = userData.username;
                     contactsSelect.appendChild(option);
+                });
+
+                contactsSelect.addEventListener('change', (e) => {
+                    currentChat = e.target.value;
+                    console.log("Chatting with:", currentChat);
                 });
             } catch (error) {
                 console.error("No contacts found:", error);
             }
+        }
+
+        // Send message
+        document.getElementById('sendButton').addEventListener('click', async () => {
+            const messageInput = document.getElementById('messageInput');
+            const message = messageInput.value;
+
+            if (message && currentChat) {
+                try {
+                    await addDoc(collection(db, `chats/${getChatId(username, currentChat)}/messages`), {
+                        sender: username,
+                        receiver: currentChat,
+                        message: message,
+                        timestamp: new Date()
+                    });
+                    console.log("Message sent:", message);
+                    messageInput.value = '';
+                } catch (error) {
+                    console.error("Error sending message:", error);
+                }
+            }
+        });
+
+        function getChatId(user1, user2) {
+            return [user1, user2].sort().join('_');
         }
     </script>
 </head>
@@ -78,5 +121,7 @@
     <h2>Private Chat</h2>
     <select id="contacts"></select>
     <div id="chatWindow"></div>
+    <input type="text" id="messageInput" placeholder="Type your message here...">
+    <button id="sendButton">Send</button>
 </body>
 </html>
