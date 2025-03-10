@@ -69,6 +69,8 @@ function checkAuthState(onAuthenticated, onUnauthenticated) {
 }
 
 export { signUp, signIn, signOutUser, checkAuthState };
+export { app, db };
+
 
 // Example usage
 // signUp('test@example.com', 'password123', 'testuser');
