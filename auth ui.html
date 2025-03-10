@@ -1,60 +1,77 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Firebase Chat Auth</title>
-    <style>
-        body { font-family: Arial, sans-serif; display: flex; flex-direction: column; align-items: center; gap: 20px; margin-top: 50px; }
-        form { display: flex; flex-direction: column; gap: 10px; }
-        input { padding: 8px; width: 200px; }
-        button { padding: 8px 12px; background: #4CAF50; color: white; border: none; cursor: pointer; }
-        button:hover { background: #45a049; }
-    </style>
-</head>
-<body>
-    <h2>Firebase Chat App</h2>
+// Firebase Auth Setup
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js';
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js';
+import { getFirestore, doc, setDoc } from 'https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js';
 
-    <h3>Signup</h3>
-    <form id="signup-form">
-        <input type="text" id="signup-username" placeholder="Username" required>
-        <input type="email" id="signup-email" placeholder="Email" required>
-        <input type="password" id="signup-password" placeholder="Password" required>
-        <button type="submit">Sign Up</button>
-    </form>
+const firebaseConfig = {
+    apiKey: "AIzaSyDlQ_JWAToYyuintCnpzJQeURXq-p9C9XI",
+    authDomain: "havsite-login-and-chat.firebaseapp.com",
+    projectId: "havsite-login-and-chat",
+    storageBucket: "havsite-login-and-chat.firebasestorage.app",
+    messagingSenderId: "116998302820",
+    appId: "1:116998302820:web:0c67e8f1b6bc9a8f200371"
+};
 
-    <h3>Signin</h3>
-    <form id="signin-form">
-        <input type="email" id="signin-email" placeholder="Email" required>
-        <input type="password" id="signin-password" placeholder="Password" required>
-        <button type="submit">Sign In</button>
-    </form>
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
 
-    <button id="signout-button">Sign Out</button>
+// Signup
+async function signUp(email, password, username) {
+    try {
+        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+        const user = userCredential.user;
 
-    <script type="module">
-        import { signUp, signIn, signOutUser } from './firebase_auth.js';
-
-        document.addEventListener('DOMContentLoaded', () => {
-            document.getElementById('signup-form').addEventListener('submit', async (e) => {
-                e.preventDefault();
-                const username = document.getElementById('signup-username').value;
-                const email = document.getElementById('signup-email').value;
-                const password = document.getElementById('signup-password').value;
-                await signUp(email, password, username);
-            });
-
-            document.getElementById('signin-form').addEventListener('submit', async (e) => {
-                e.preventDefault();
-                const email = document.getElementById('signin-email').value;
-                const password = document.getElementById('signin-password').value;
-                await signIn(email, password);
-            });
-
-            document.getElementById('signout-button').addEventListener('click', async () => {
-                await signOutUser();
-            });
+        // Save username to Firestore
+        await setDoc(doc(db, 'users', user.uid), {
+            email: user.email,
+            username: username,
+            createdAt: new Date()
         });
-    </script>
-</body>
-</html>
+
+        console.log('Signup successful:', user);
+    } catch (error) {
+        console.error('Signup error:', error.message);
+    }
+}
+
+// Signin
+async function signIn(email, password) {
+    try {
+        const userCredential = await signInWithEmailAndPassword(auth, email, password);
+        console.log('Signin successful:', userCredential.user);
+    } catch (error) {
+        console.error('Signin error:', error.message);
+    }
+}
+
+// Signout
+async function signOutUser() {
+    try {
+        await signOut(auth);
+        console.log('Signout successful');
+    } catch (error) {
+        console.error('Signout error:', error.message);
+    }
+}
+
+// Auto-login check when visiting the chat section
+function checkAuthState(onAuthenticated, onUnauthenticated) {
+    onAuthStateChanged(auth, (user) => {
+        if (user) {
+            console.log('User is signed in:', user);
+            if (onAuthenticated) onAuthenticated(user);
+        } else {
+            console.log('No user signed in');
+            if (onUnauthenticated) onUnauthenticated();
+        }
+    });
+}
+
+export { signUp, signIn, signOutUser, checkAuthState };
+
+// Example usage
+// signUp('test@example.com', 'password123', 'testuser');
+// signIn('test@example.com', 'password123');
+// signOutUser();
+// checkAuthState(() => console.log('User is already signed in'), () => console.log('User needs to sign in'));

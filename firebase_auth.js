@@ -55,18 +55,23 @@ async function signOutUser() {
     }
 }
 
-// Listen for auth state changes
-onAuthStateChanged(auth, (user) => {
-    if (user) {
-        console.log('User is signed in:', user);
-    } else {
-        console.log('No user signed in');
-    }
-});
+// Auto-login check when visiting the chat section
+function checkAuthState(onAuthenticated, onUnauthenticated) {
+    onAuthStateChanged(auth, (user) => {
+        if (user) {
+            console.log('User is signed in:', user);
+            if (onAuthenticated) onAuthenticated(user);
+        } else {
+            console.log('No user signed in');
+            if (onUnauthenticated) onUnauthenticated();
+        }
+    });
+}
 
-export { signUp, signIn, signOutUser };
+export { signUp, signIn, signOutUser, checkAuthState };
 
 // Example usage
 // signUp('test@example.com', 'password123', 'testuser');
 // signIn('test@example.com', 'password123');
 // signOutUser();
+// checkAuthState(() => console.log('User is already signed in'), () => console.log('User needs to sign in'));
