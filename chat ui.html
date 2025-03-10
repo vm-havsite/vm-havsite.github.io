@@ -41,7 +41,7 @@
     </style>
     <script type="module">
         import { getAuth, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js';
-        import { getFirestore, doc, getDoc, collection, getDocs, addDoc } from 'https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js';
+        import { getFirestore, doc, getDoc, collection, getDocs, addDoc, query, orderBy, onSnapshot } from 'https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js';
         import { app, db } from './firebase_auth.js';
 
         const auth = getAuth(app);
@@ -85,10 +85,36 @@
                 contactsSelect.addEventListener('change', (e) => {
                     currentChat = e.target.value;
                     console.log("Chatting with:", currentChat);
+                    listenForMessages();
                 });
             } catch (error) {
                 console.error("No contacts found:", error);
             }
+        }
+
+        // Listen for messages in real time
+        function listenForMessages() {
+            if (!currentChat) return;
+            const chatId = getChatId(username, currentChat);
+            const messagesRef = collection(db, `chats/${chatId}/messages`);
+            const q = query(messagesRef, orderBy('timestamp'));
+
+            onSnapshot(q, (snapshot) => {
+                const messages = snapshot.docs.map(doc => doc.data());
+                console.log("Fetched messages:", messages);
+                displayMessages(messages);
+            }, (error) => {
+                console.error("Error fetching messages:", error);
+            });
+        }
+
+        // Display messages
+        function displayMessages(messages) {
+            const chatWindow = document.getElementById('chatWindow');
+            chatWindow.innerHTML = messages
+                .map(m => `<p><strong>${m.sender}:</strong> ${m.message}</p>`)
+                .join('');
+            chatWindow.scrollTop = chatWindow.scrollHeight;
         }
 
         // Send message
