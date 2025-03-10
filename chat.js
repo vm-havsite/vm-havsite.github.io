@@ -48,3 +48,4 @@ async function deleteMessage(chatId, messageId) {
 }
 
 export { sendMessage, listenForMessages, deleteMessage };
+export { getChatId };
