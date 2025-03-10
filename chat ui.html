@@ -43,7 +43,7 @@
                 loadContacts();
             },
             () => {
-                window.location.href = 'auth ui.html';
+                window.location.href = 'auth_ui.html';
             }
         );
 
@@ -58,16 +58,17 @@
 
             contactsSelect.addEventListener('change', (e) => {
                 currentChat = e.target.value;
-                listenForMessages(displayMessages);
+                listenForMessages(username, currentChat, displayMessages); // Pass username and currentChat
             });
         }
 
         // Listen and display messages
         function displayMessages(messages) {
+            console.log('Messages:', messages); // Debugging
             const messagesDiv = document.getElementById('messages');
             messagesDiv.innerHTML = messages
                 .filter(m => (m.sender === username && m.receiver === currentChat) || (m.sender === currentChat && m.receiver === username))
-                .map(m => `<p><strong>${m.sender}:</strong> ${m.message} <button onclick="deleteMessage('${m.id}')">🗑️</button></p>`)
+                .map(m => `<p><strong>${m.sender}:</strong> ${m.message} <button onclick="deleteMessage('${getChatId(username, currentChat)}', '${m.id}')">🗑️</button></p>`)
                 .join('');
             messagesDiv.scrollTop = messagesDiv.scrollHeight;
         }
