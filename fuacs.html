@@ -49,19 +49,20 @@
         }
     </style>
     <script type="module">
-        import { getAuth, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js';
-        import { getFirestore, doc, getDoc, collection, getDocs, addDoc, query, orderBy, onSnapshot } from 'https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js';
-        import { Client, Storage } from 'https://cdn.jsdelivr.net/npm/appwrite@latest';
-        import { app, db } from './firebase_auth.js';
+import { getAuth, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js';
+import { getFirestore, doc, getDoc, collection, getDocs, addDoc, query, orderBy, onSnapshot } from 'https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js';
+import * as Appwrite from 'https://cdn.jsdelivr.net/npm/appwrite@latest';
+import { app, db } from './firebase_auth.js';
 
-        const auth = getAuth(app);
+const auth = getAuth(app);
 
-        const client = new Client()
-            .setEndpoint('https://cloud.appwrite.io/v1')  //apwrite endpoint
-            .setProject('havsite-user-login-0')  //project id
-	    .setKey('standard_b03e0805098241db474ff891b6050e6bf4f9ad9aeada70d064b5ee8632c63f597ca54f959538681cc4008658fae8e2c250dff98d2f35b4d1149ee4f238be812d362a4946c272ee20714f009a0498580fb0c1b4046ff2158cc2315b3df4d08214ef0ab7d95b9960de9e018b65865da9552e55c25111280e89cfadfb33d7489c9c');  //api key
+const client = new Appwrite.Client()
+    .setEndpoint('https://cloud.appwrite.io/v1') // Appwrite endpoint
+    .setProject('havsite-user-login-0') // Project ID
+    .setKey('standard_b03e0805098241db474ff891b6050e6bf4f9ad9aeada70d064b5ee8632c63f597ca54f959538681cc4008658fae8e2c250dff98d2f35b4d1149ee4f238be812d362a4946c272ee20714f009a0498580fb0c1b4046ff2158cc2315b3df4d08214ef0ab7d95b9960de9e018b65865da9552e55c25111280e89cfadfb33d7489c9c'); // Secure, limited permissions API key
 
-        const storage = new Storage(client);
+const storage = new Appwrite.Storage(client);
+
 
         let username = '';
         let currentChat = '';
