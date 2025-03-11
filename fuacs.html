@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html>
 <head>
+<link rel="icon" href="images/logo_og.png" type="image/x-icon">
+
     <title>Private Chat</title>
     <style>
         body {
@@ -198,7 +200,7 @@ const storage = new Appwrite.Storage(client);
 <script>
   function displayAttachment(fileUrl, fileName) {
     const fileExtension = fileName.split('.').pop().toLowerCase();
-    const container = document.getElementById('chatwindow');
+    const container = document.getElementById('chatWindow');
 
     if (['jpg', 'jpeg', 'png', 'gif', 'webp'].includes(fileExtension)) {
       container.innerHTML += `<img src="${fileUrl}" alt="${fileName}" class="image-preview">`;
