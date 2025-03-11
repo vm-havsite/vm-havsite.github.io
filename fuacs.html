@@ -56,6 +56,7 @@ console.log(window.Appwrite);
 import { getAuth, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js';
 import { getFirestore, doc, getDoc, collection, getDocs, addDoc, query, orderBy, onSnapshot } from 'https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js';
 import { app, db } from './firebase_auth.js';
+const auth = getAuth(app); // Make sure this line exists
 
 
 const client = new Appwrite.Client()
