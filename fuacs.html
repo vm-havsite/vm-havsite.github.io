@@ -47,6 +47,37 @@
                 font-size: 14px;
             }
         }
+  .file-attachment {
+    display: flex;
+    align-items: center;
+    margin: 5px 0;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+  }
+
+  .file-attachment a {
+    margin-left: 8px;
+    color: #007bff;
+    text-decoration: none;
+    font-weight: bold;
+  }
+
+  .file-attachment a:hover {
+    text-decoration: underline;
+  }
+
+  .file-icon {
+    font-size: 20px;
+  }
+
+  .image-preview {
+    max-width: 100%;
+    max-height: 150px;
+    border-radius: 8px;
+    margin: 5px 0;
+  }
     </style>
 
 <script src="https://cdn.jsdelivr.net/npm/appwrite@17.0.0">
@@ -164,6 +195,22 @@ const storage = new Appwrite.Storage(client);
             return [user1, user2].sort().join('_');
         }
     </script>
+<script>
+  function displayAttachment(fileUrl, fileName) {
+    const fileExtension = fileName.split('.').pop().toLowerCase();
+    const container = document.getElementById('chatwindow');
+
+    if (['jpg', 'jpeg', 'png', 'gif', 'webp'].includes(fileExtension)) {
+      container.innerHTML += `<img src="${fileUrl}" alt="${fileName}" class="image-preview">`;
+    } else {
+      container.innerHTML += `
+        <div class="file-attachment">
+          📎 <a href="${fileUrl}" target="_blank">${fileName}</a>
+        </div>
+      `;
+    }
+  }
+</script>
 </head>
 <body>
     <h2>Private Chat</h2>
@@ -172,5 +219,10 @@ const storage = new Appwrite.Storage(client);
     <input type="text" id="messageInput" placeholder="Type your message here...">
     <input type="file" id="fileInput">
     <button id="sendButton">Send</button>
+    <script>
+  displayAttachment('https://example.com/file.png', 'example-image.png');
+  displayAttachment('https://example.com/document.pdf', 'document.pdf');
+</script>
+
 </body>
 </html>
