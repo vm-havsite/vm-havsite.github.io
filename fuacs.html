@@ -145,18 +145,33 @@ const storage = new Appwrite.Storage(client);
             });
         }
 
-        function displayMessages(messages) {
-            const chatWindow = document.getElementById('chatWindow');
-            chatWindow.innerHTML = messages
-                .map(m => {
-                    if (m.fileUrl) {
-                        return `<p><strong>${m.sender}:</strong> <a href="${m.fileUrl}" target="_blank">📁 File Attachment</a></p>`;
-                    }
-                    return `<p><strong>${m.sender}:</strong> ${m.message}</p>`;
-                })
-                .join('');
-            chatWindow.scrollTop = chatWindow.scrollHeight;
+function displayMessages(messages) {
+    const chatWindow = document.getElementById('chatWindow');
+    chatWindow.innerHTML = '';
+    messages.forEach(msg => {
+        const messageElement = document.createElement('div');
+        messageElement.className = 'message';
+        messageElement.innerHTML = `<strong>${msg.username}</strong>: ${msg.text}`;
+
+        if (msg.fileUrl && msg.fileName) {
+            const attachmentElement = document.createElement('div');
+            attachmentElement.className = 'attachment';
+
+            const fileExtension = msg.fileName.split('.').pop().toLowerCase();
+            if (['png', 'jpg', 'jpeg', 'gif'].includes(fileExtension)) {
+                // Display image directly
+                attachmentElement.innerHTML = `<img src="${msg.fileUrl}" alt="${msg.fileName}" style="max-width: 200px; max-height: 200px; border-radius: 8px; margin-top: 5px;">`;
+            } else {
+                // Show as downloadable link
+                attachmentElement.innerHTML = `<a href="${msg.fileUrl}" target="_blank">📎 ${msg.fileName}</a>`;
+            }
+            messageElement.appendChild(attachmentElement);
         }
+
+        chatWindow.appendChild(messageElement);
+    });
+    chatWindow.scrollTop = chatWindow.scrollHeight;
+}
 
         async function uploadFile(file) {
             try {
@@ -197,22 +212,7 @@ const storage = new Appwrite.Storage(client);
             return [user1, user2].sort().join('_');
         }
     </script>
-<script>
-  function displayAttachment(fileUrl, fileName) {
-    const fileExtension = fileName.split('.').pop().toLowerCase();
-    const container = document.getElementById('chatWindow');
 
-    if (['jpg', 'jpeg', 'png', 'gif', 'webp'].includes(fileExtension)) {
-      container.innerHTML += `<img src="${fileUrl}" alt="${fileName}" class="image-preview">`;
-    } else {
-      container.innerHTML += `
-        <div class="file-attachment">
-          📎 <a href="${fileUrl}" target="_blank">${fileName}</a>
-        </div>
-      `;
-    }
-  }
-</script>
 </head>
 <body>
     <h2>Private Chat</h2>
