@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Private Chat</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            background-color: #f4f4f4;
+            padding: 20px;
+        }
+        h2 {
+            color: #333;
+        }
+        select, #chatWindow, #messageInput, #fileInput, button {
+            width: 100%;
+            max-width: 500px;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+        }
+        #chatWindow {
+            height: 300px;
+            background-color: #fff;
+            overflow-y: auto;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        @media screen and (max-width: 600px) {
+            body {
+                padding: 10px;
+            }
+            select, #chatWindow, #messageInput, #fileInput, button {
+                font-size: 14px;
+            }
+        }
+    </style>
+    <script type="module">
+        import { getAuth, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js';
+        import { getFirestore, doc, getDoc, collection, getDocs, addDoc, query, orderBy, onSnapshot } from 'https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js';
+        import { Client, Storage } from 'https://cdn.jsdelivr.net/npm/appwrite@latest';
+        import { app, db } from './firebase_auth.js';
+
+        const auth = getAuth(app);
+
+        const client = new Client()
+            .setEndpoint('https://cloud.appwrite.io/v1');  //apwrite endpoint
+            .setProject('havsite-user-login-0');  //project id
+	    .setKey('standard_b03e0805098241db474ff891b6050e6bf4f9ad9aeada70d064b5ee8632c63f597ca54f959538681cc4008658fae8e2c250dff98d2f35b4d1149ee4f238be812d362a4946c272ee20714f009a0498580fb0c1b4046ff2158cc2315b3df4d08214ef0ab7d95b9960de9e018b65865da9552e55c25111280e89cfadfb33d7489c9c');  //api key
+
+        const storage = new Storage(client);
+
+        let username = '';
+        let currentChat = '';
+
+        onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                const userDoc = await getDoc(doc(db, "users", user.uid));
+                if (userDoc.exists()) {
+                    const userData = userDoc.data();
+                    username = userData.username;
+                    loadContacts();
+                }
+            } else {
+                window.location.href = "auth ui.html";
+            }
+        });
+
+        async function loadContacts() {
+            const querySnapshot = await getDocs(collection(db, "users"));
+            const contactsSelect = document.getElementById("contacts");
+
+            querySnapshot.forEach((doc) => {
+                const userData = doc.data();
+                let option = document.createElement("option");
+                option.value = userData.username;
+                option.textContent = userData.username;
+                contactsSelect.appendChild(option);
+            });
+
+            contactsSelect.addEventListener('change', (e) => {
+                currentChat = e.target.value;
+                listenForMessages();
+            });
+        }
+
+        function listenForMessages() {
+            const chatId = getChatId(username, currentChat);
+            const messagesRef = collection(db, `chats/${chatId}/messages`);
+            const q = query(messagesRef, orderBy('timestamp'));
+
+            onSnapshot(q, (snapshot) => {
+                const messages = snapshot.docs.map(doc => doc.data());
+                displayMessages(messages);
+            });
+        }
+
+        function displayMessages(messages) {
+            const chatWindow = document.getElementById('chatWindow');
+            chatWindow.innerHTML = messages
+                .map(m => {
+                    if (m.fileUrl) {
+                        return `<p><strong>${m.sender}:</strong> <a href="${m.fileUrl}" target="_blank">📁 File Attachment</a></p>`;
+                    }
+                    return `<p><strong>${m.sender}:</strong> ${m.message}</p>`;
+                })
+                .join('');
+            chatWindow.scrollTop = chatWindow.scrollHeight;
+        }
+
+        async function uploadFile(file) {
+            try {
+                const response = await storage.createFile('havsite-storage-1', 'unique()', file);
+                return `https://cloud.appwrite.io/v1/storage/buckets/havsite-storage-1/files/${response.$id}/view?project=YOUR-PROJECT-ID`;
+            } catch (error) {
+                console.error('Upload failed:', error);
+                return '';
+            }
+        }
+
+        document.getElementById('sendButton').addEventListener('click', async () => {
+            const messageInput = document.getElementById('messageInput');
+            const fileInput = document.getElementById('fileInput');
+            const message = messageInput.value;
+            const file = fileInput.files[0];
+
+            let fileUrl = '';
+            if (file) {
+                fileUrl = await uploadFile(file);
+            }
+
+            if (message || fileUrl) {
+                const chatId = getChatId(username, currentChat);
+                await addDoc(collection(db, `chats/${chatId}/messages`), {
+                    sender: username,
+                    receiver: currentChat,
+                    message: message || '',
+                    fileUrl: fileUrl || '',
+                    timestamp: new Date()
+                });
+                messageInput.value = '';
+                fileInput.value = '';
+            }
+        });
+
+        function getChatId(user1, user2) {
+            return [user1, user2].sort().join('_');
+        }
+    </script>
+</head>
+<body>
+    <h2>Private Chat</h2>
+    <select id="contacts"></select>
+    <div id="chatWindow"></div>
+    <input type="text" id="messageInput" placeholder="Type your message here...">
+    <input type="file" id="fileInput">
+    <button id="sendButton">Send</button>
+</body>
+</html>
