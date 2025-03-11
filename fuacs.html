@@ -128,7 +128,7 @@ const storage = new Appwrite.Storage(client);
         async function uploadFile(file) {
             try {
                 const response = await storage.createFile('havsite-storage-1', 'unique()', file);
-                return `https://cloud.appwrite.io/v1/storage/buckets/havsite-storage-1/files/${response.$id}/view?project=YOUR-PROJECT-ID`;
+                return `https://cloud.appwrite.io/v1/storage/buckets/havsite-storage-1/files/${response.$id}/view?project=havsite-user-login-0`;
             } catch (error) {
                 console.error('Upload failed:', error);
                 return '';
