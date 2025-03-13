@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Modern Chat App</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Firebase -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+    <!-- Appwrite -->
+    <script src="https://cdn.jsdelivr.net/npm/appwrite@13.0.1"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+      .message-container {
+        height: calc(100vh - 200px);
+        overflow-y: auto;
+      }
+      .contact-list {
+        height: calc(100vh - 150px);
+        overflow-y: auto;
+      }
+      .hidden {
+        display: none;
+      }
+      .message {
+        max-width: 70%;
+        margin: 8px;
+        padding: 12px;
+        border-radius: 8px;
+      }
+      .message.sent {
+        background-color: #3b82f6;
+        color: white;
+        margin-left: auto;
+      }
+      .message.received {
+        background-color: white;
+        color: #1f2937;
+      }
+    </style>
+  </head>
+  <body class="bg-gray-100">
+    <!-- Auth Screen -->
+    <div id="authScreen" class="min-h-screen flex items-center justify-center">
+      <div class="bg-white p-8 rounded-lg shadow-md w-96">
+        <h2 class="text-2xl font-bold mb-6 text-center" id="authTitle">Login</h2>
+        <div id="errorMessage" class="hidden bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4"></div>
+        <form id="authForm">
+          <div class="mb-4">
+            <label class="block text-gray-700 text-sm font-bold mb-2">Email</label>
+            <input type="email" id="email" class="w-full p-2 border rounded focus:outline-none focus:border-blue-500" required>
+          </div>
+          <div class="mb-6">
+            <label class="block text-gray-700 text-sm font-bold mb-2">Password</label>
+            <input type="password" id="password" class="w-full p-2 border rounded focus:outline-none focus:border-blue-500" required>
+          </div>
+          <button type="submit" class="w-full bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600">
+            <span id="authButtonText">Login</span>
+          </button>
+        </form>
+        <p class="mt-4 text-center text-sm">
+          <span id="authToggleText">Don't have an account?</span>
+          <button onclick="toggleAuth()" class="text-blue-500 hover:text-blue-700 ml-1">
+            <span id="authToggleButtonText">Sign Up</span>
+          </button>
+        </p>
+      </div>
+    </div>
+
+    <!-- Chat Screen -->
+    <div id="chatScreen" class="hidden min-h-screen">
+      <div class="container mx-auto p-4 h-screen flex">
+        <div class="bg-white rounded-lg shadow-lg overflow-hidden w-full max-w-6xl mx-auto flex">
+          <!-- Sidebar -->
+          <div class="w-1/4 bg-gray-50 border-r border-gray-200 hidden md:flex flex-col">
+            <div class="p-4 border-b border-gray-200">
+              <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-2">
+                  <i data-lucide="user-circle-2" class="w-8 h-8 text-gray-600"></i>
+                  <div>
+                    <h2 id="userEmail" class="font-semibold text-gray-800"></h2>
+                    <p class="text-sm text-gray-500">Online</p>
+                  </div>
+                </div>
+                <button onclick="logout()" class="text-sm text-red-500 hover:text-red-700">
+                  Logout
+                </button>
+              </div>
+            </div>
+            <div class="p-4">
+              <div class="relative">
+                <i data-lucide="search" class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5"></i>
+                <input
+                  type="text"
+                  placeholder="Search contacts..."
+                  class="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:border-blue-500"
+                >
+              </div>
+            </div>
+            <div id="contactsList" class="flex-1 overflow-y-auto contact-list"></div>
+          </div>
+
+          <!-- Main Chat Area -->
+          <div class="flex-1 flex flex-col">
+            <!-- Chat Header -->
+            <div class="p-4 border-b border-gray-200 flex items-center justify-between bg-white">
+              <div class="flex items-center space-x-3">
+                <i data-lucide="user-circle-2" class="w-10 h-10 text-gray-600"></i>
+                <div>
+                  <h2 id="selectedContact" class="font-semibold text-gray-800">Select a contact</h2>
+                </div>
+              </div>
+              <i data-lucide="settings" class="w-5 h-5 text-gray-600 cursor-pointer hover:text-blue-500"></i>
+            </div>
+
+            <!-- Messages -->
+            <div id="messagesContainer" class="flex-1 overflow-y-auto p-4 space-y-4 bg-gray-50 message-container"></div>
+
+            <!-- Message Input -->
+            <div class="p-4 border-t border-gray-200 bg-white">
+              <div class="flex items-center space-x-2">
+                <label class="cursor-pointer">
+                  <input type="file" class="hidden" id="fileInput" onchange="handleFileSelect(event)">
+                  <i data-lucide="paperclip" class="w-5 h-5 text-gray-600 hover:text-blue-500"></i>
+                </label>
+                <textarea
+                  id="messageInput"
+                  placeholder="Type a message..."
+                  class="flex-1 p-2 border border-gray-200 rounded-lg focus:outline-none focus:border-blue-500 resize-none"
+                  rows="1"
+                  onkeypress="handleKeyPress(event)"
+                ></textarea>
+                <button
+                  onclick="sendMessage()"
+                  class="p-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 focus:outline-none"
+                >
+                  <i data-lucide="send" class="w-5 h-5"></i>
+                </button>
+              </div>
+              <div id="selectedFile" class="mt-2 text-sm text-gray-600 hidden"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // Initialize Firebase
+      const firebaseConfig = {
+        // Replace with your Firebase config
+    	apiKey: "AIzaSyDlQ_JWAToYyuintCnpzJQeURXq-p9C9XI",
+    	authDomain: "havsite-login-and-chat.firebaseapp.com",
+   	projectId: "havsite-login-and-chat",
+    	storageBucket: "havsite-login-and-chat.firebasestorage.app",
+    	messagingSenderId: "116998302820",
+    	appId: "1:116998302820:web:0c67e8f1b6bc9a8f200371"
+      };
+      firebase.initializeApp(firebaseConfig);
+
+      // Initialize Appwrite
+      const appwrite = new Appwrite();
+      appwrite
+        .setEndpoint('https://cloud.appwrite.io/v1')
+        .setProject('havsite-user-login-0');
+      
+      const storage = new appwrite.Storage();
+      const BUCKET_ID = 'havsite-storage-1';
+
+      // Auth state
+      let isLogin = true;
+      let currentUser = null;
+      let selectedContactId = null;
+      let selectedFile = null;
+
+      // Initialize Lucide icons
+      lucide.createIcons();
+
+      // Auth functions
+      function toggleAuth() {
+        isLogin = !isLogin;
+        document.getElementById('authTitle').textContent = isLogin ? 'Login' : 'Sign Up';
+        document.getElementById('authButtonText').textContent = isLogin ? 'Login' : 'Sign Up';
+        document.getElementById('authToggleText').textContent = isLogin ? "Don't have an account?" : "Already have an account?";
+        document.getElementById('authToggleButtonText').textContent = isLogin ? 'Sign Up' : 'Login';
+        document.getElementById('errorMessage').classList.add('hidden');
+      }
+
+      document.getElementById('authForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const email = document.getElementById('email').value;
+        const password = document.getElementById('password').value;
+        
+        try {
+          if (isLogin) {
+            await firebase.auth().signInWithEmailAndPassword(email, password);
+          } else {
+            await firebase.auth().createUserWithEmailAndPassword(email, password);
+          }
+        } catch (error) {
+          const errorMessage = document.getElementById('errorMessage');
+          errorMessage.textContent = error.message;
+          errorMessage.classList.remove('hidden');
+        }
+      });
+
+      async function logout() {
+        try {
+          await firebase.auth().signOut();
+        } catch (error) {
+          console.error('Error signing out:', error);
+        }
+      }
+
+      // Chat functions
+      function handleFileSelect(event) {
+        selectedFile = event.target.files[0];
+        const selectedFileDiv = document.getElementById('selectedFile');
+        selectedFileDiv.textContent = `Selected file: ${selectedFile.name}`;
+        selectedFileDiv.classList.remove('hidden');
+      }
+
+      async function sendMessage() {
+        if (!currentUser || !selectedContactId) return;
+        
+        const messageInput = document.getElementById('messageInput');
+        const message = messageInput.value.trim();
+        if (!message && !selectedFile) return;
+
+        let attachmentUrl;
+        if (selectedFile) {
+          try {
+            const fileId = crypto.randomUUID();
+            await storage.createFile(havsite-storage-1, fileId, selectedFile);
+            attachmentUrl = storage.getFileView(havsite-storage-1, fileId);
+          } catch (error) {
+            console.error('Failed to upload file:', error);
+          }
+        }
+
+        try {
+          await firebase.firestore().collection('messages').add({
+            text: message,
+            sender: currentUser.email,
+            receiver: selectedContactId,
+            timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+            attachmentUrl
+          });
+
+          messageInput.value = '';
+          selectedFile = null;
+          document.getElementById('selectedFile').classList.add('hidden');
+          document.getElementById('fileInput').value = '';
+        } catch (error) {
+          console.error('Error sending message:', error);
+        }
+      }
+
+      function handleKeyPress(event) {
+        if (event.key === 'Enter' && !event.shiftKey) {
+          event.preventDefault();
+          sendMessage();
+        }
+      }
+
+      function selectContact(contactId, email) {
+        selectedContactId = contactId;
+        document.getElementById('selectedContact').textContent = email;
+        loadMessages();
+      }
+
+      async function loadMessages() {
+        if (!currentUser || !selectedContactId) return;
+
+        const messagesContainer = document.getElementById('messagesContainer');
+        messagesContainer.innerHTML = '';
+
+        const q = firebase.firestore()
+          .collection('messages')
+          .where('sender', 'in', [currentUser.email, selectedContactId])
+          .where('receiver', 'in', [currentUser.email, selectedContactId])
+          .orderBy('timestamp', 'asc');
+
+        q.onSnapshot((snapshot) => {
+          snapshot.docChanges().forEach((change) => {
+            if (change.type === 'added') {
+              const message = change.doc.data();
+              const messageDiv = document.createElement('div');
+              const isSent = message.sender === currentUser.email;
+              
+              messageDiv.className = `message ${isSent ? 'sent' : 'received'}`;
+              messageDiv.innerHTML = `
+                <p>${message.text}</p>
+                ${message.attachmentUrl ? `
+                  <div class="mt-2">
+                    <a href="${message.attachmentUrl}" target="_blank" rel="noopener noreferrer" 
+                       class="text-sm ${isSent ? 'text-blue-100' : 'text-blue-500'} underline">
+                      View Attachment
+                    </a>
+                  </div>
+                ` : ''}
+                <p class="text-xs mt-1 ${isSent ? 'text-blue-100' : 'text-gray-500'}">
+                  ${message.timestamp ? new Date(message.timestamp.toDate()).toLocaleTimeString() : ''}
+                </p>
+              `;
+              
+              messagesContainer.appendChild(messageDiv);
+              messagesContainer.scrollTop = messagesContainer.scrollHeight;
+            }
+          });
+        });
+      }
+
+      // Auth state observer
+      firebase.auth().onAuthStateChanged((user) => {
+        currentUser = user;
+        if (user) {
+          document.getElementById('authScreen').classList.add('hidden');
+          document.getElementById('chatScreen').classList.remove('hidden');
+          document.getElementById('userEmail').textContent = user.email;
+          
+          // Load contacts (in a real app, this would be fetched from Firestore)
+          const contactsList = document.getElementById('contactsList');
+          contactsList.innerHTML = `
+            <div class="p-4 hover:bg-gray-100 cursor-pointer border-b border-gray-200" 
+                 onclick="selectContact('contact1@example.com', 'contact1@example.com')">
+              <div class="flex items-center space-x-3">
+                <i data-lucide="user-circle-2" class="w-10 h-10 text-gray-600"></i>
+                <div class="flex-1">
+                  <h3 class="font-medium text-gray-800">contact1@example.com</h3>
+                </div>
+              </div>
+            </div>
+            <div class="p-4 hover:bg-gray-100 cursor-pointer border-b border-gray-200"
+                 onclick="selectContact('contact2@example.com', 'contact2@example.com')">
+              <div class="flex items-center space-x-3">
+                <i data-lucide="user-circle-2" class="w-10 h-10 text-gray-600"></i>
+                <div class="flex-1">
+                  <h3 class="font-medium text-gray-800">contact2@example.com</h3>
+                </div>
+              </div>
+            </div>
+          `;
+          lucide.createIcons();
+        } else {
+          document.getElementById('authScreen').classList.remove('hidden');
+          document.getElementById('chatScreen').classList.add('hidden');
+        }
+      });
+    </script>
+  </body>
+</html>
