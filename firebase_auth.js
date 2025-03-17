@@ -70,6 +70,7 @@ function checkAuthState(onAuthenticated, onUnauthenticated) {
 
 export { signUp, signIn, signOutUser, checkAuthState };
 export { app, db };
+export { GoogleAuthProvider, signInWithPopup, signOut }
 
 
 // Example usage
