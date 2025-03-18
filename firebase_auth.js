@@ -2,6 +2,8 @@
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js';
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js';
 import { getFirestore, doc, setDoc } from 'https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js';
+import { GoogleAuthProvider, signInWithPopup } from 'https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js';
+
 
 const firebaseConfig = {
     apiKey: "AIzaSyDlQ_JWAToYyuintCnpzJQeURXq-p9C9XI",
@@ -68,7 +70,7 @@ function checkAuthState(onAuthenticated, onUnauthenticated) {
     });
 }
 
-export { signUp, signIn, signOutUser, checkAuthState };
+export { signUp, signIn, signOutUser, checkAuthState, googleSignIn };
 export { app, db };
 export { GoogleAuthProvider, signInWithPopup, signOut }
 
