@@ -2,7 +2,6 @@
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js';
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js';
 import { getFirestore, doc, setDoc } from 'https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js';
-import { GoogleAuthProvider, signInWithPopup } from 'https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js';
 
 
 const firebaseConfig = {
@@ -70,9 +69,8 @@ function checkAuthState(onAuthenticated, onUnauthenticated) {
     });
 }
 
-export { signUp, signIn, signOutUser, checkAuthState, googleSignIn };
+export { signUp, signIn, signOutUser, checkAuthState,};
 export { app, db };
-export { GoogleAuthProvider, signInWithPopup, signOut }
 
 
 // Example usage
