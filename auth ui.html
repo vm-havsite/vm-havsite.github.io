@@ -20,11 +20,6 @@
         <input type="text" id="signup-username" placeholder="Username" required>
         <input type="email" id="signup-email" placeholder="Email" required>
         <input type="password" id="signup-password" placeholder="Password" required>
-	<br>
-	<hr>
-        OR
-	<br>
-	<button type="button" onclick="googleSignUp()">Sign Up with Google</button>
         <button type="submit">Sign Up</button>
     </form>
 
@@ -32,12 +27,7 @@
     <form id="signin-form">
         <input type="email" id="signin-email" placeholder="Email" required>
         <input type="password" id="signin-password" placeholder="Password" required>
-	<br>
-	<hr>
-        OR
-	<br>
-	<button type="button" onclick="googleSignIn()">Sign In with Google</button>
-        <button type="submit" onclick="googleSignOut()">Sign In</button>
+        <button type="submit">Sign In</button>
     </form>
 
     <button id="signout-button">Sign Out</button>
@@ -65,50 +55,6 @@
                 await signOutUser();
             });
         });
-import { GoogleAuthProvider, signInWithPopup, signOut } from "firebase/auth";
-
-const provider = new GoogleAuthProvider();
-
-// Google Sign-Up (Same as sign-in, but for clarity)
-function googleSignUp() {
-    signInWithPopup(auth, provider)
-        .then((result) => {
-            const user = result.user;
-            console.log("User signed up:", user.displayName, user.email);
-            alert(`Welcome, ${user.displayName}! Your account has been created.`);
-            // Redirect user if needed
-            // window.location.href = "dashboard.html";
-        })
-        .catch((error) => {
-            console.error("Error signing up:", error);
-        });
-}
-
-// Google Sign-In
-function googleSignIn() {
-    signInWithPopup(auth, provider)
-        .then((result) => {
-            const user = result.user;
-            console.log("User signed in:", user.displayName, user.email);
-            alert(`Welcome back, ${user.displayName}!`);
-            // Redirect if needed
-        })
-        .catch((error) => {
-            console.error("Error signing in:", error);
-        });
-}
-
-// Google Sign-Out
-function googleSignOut() {
-    signOut(auth)
-        .then(() => {
-            alert("User signed out");
-        })
-        .catch((error) => {
-            console.error("Error signing out:", error);
-        });
-}
-
     </script>
 </body>
 </html>
