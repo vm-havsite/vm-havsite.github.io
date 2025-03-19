@@ -107,7 +107,7 @@
                 await signOutUser();
             });
         });
-import { GoogleAuthProvider, signInWithPopup, signOut } from "firebase/auth";
+import { GoogleAuthProvider, signInWithPopup, signOut } from "./firebase_auth.js";
 
 const provider = new GoogleAuthProvider();
 
@@ -154,7 +154,7 @@ function googleSignOut() {
     </script>
     <script  defer loading="eager">
         document.getElementById('signup-form').addEventListener('submit', function(event) {
-
+	event.preventdefault()
             // Get user input
             const username = document.getElementById('signup-username').value;
             const email = document.getElementById('signup-email').value;
