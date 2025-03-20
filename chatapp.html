@@ -53,9 +53,10 @@
 </head>
 <body>
 <div class="main">
-<div id="contacts"></div>
-<div id="chatwindow">
+    <select id="contacts"></select>
+    <div id="chatWindow"></div>
     <input type="text" id="messageInput" placeholder="Type your message here...">
+    <input type="file" id="fileInput">
     <button id="sendButton">Send</button>
 </div>
 </div>
@@ -99,7 +100,7 @@
     
                 querySnapshot.forEach((doc) => {
                     const userData = doc.data();
-                    let option = document.createElement("button");
+                    let option = document.createElement("option");
                     option.value = userData.username;
                     option.textContent = userData.username;
                     contactsSelect.appendChild(option);
