@@ -2,7 +2,7 @@
 <html>
 <head>
     <title>HavChat</title>
-    <meta charset="UTF-8">
+        <meta charset="UTF-8">
     <meta http-equiv=”refresh” content=”5″>
     <meta name="viewport" content="width=device-width, initial-scale=1" decription="chat app by havsite">
     <link rel="icon" type="image/x-icon" href="images/logo_og.png">
@@ -139,14 +139,23 @@ function listenForMessages() {
         displayMessages(messages);
     });
 }
-
 function displayMessages(messages) {
-    const chatWindow = document.getElementById('chatWindow');
-    chatWindow.innerHTML = messages
-        .map(m => `<p><strong>${m.sender}:</strong> ${m.message}</p>`)
-        .join('');
-    chatWindow.scrollTop = chatWindow.scrollHeight;
-}
+                const chatWindow = document.getElementById('chatWindow');
+                chatWindow.innerHTML = messages
+                    .map(m => {
+                        if (m.fileUrl) {
+                            const fileExtension = m.fileUrl.split('.').pop().toLowerCase();
+                            const imageExtensions = ['jpg', 'jpeg', 'png', 'gif', 'bmp', 'webp'];
+                            if (imageExtensions.includes(fileExtension)) {
+                                return `<div class="un"><strong>${m.sender}:</strong> <img src="${m.fileUrl}" alt="Image" style="max-width: 100%; height: auto;"></div>`;
+                            } else {
+                                return `<p class="un"><strong>${m.sender}:</strong> <a href="${m.fileUrl}" target="_blank">📁 File Attachment</a></p>`;
+                            }
+                        }
+                        return `<p><strong>${m.sender}:</strong> ${m.message}</p>`;
+                    })
+                    .join('');
+            }
 
 document.getElementById('sendButton').addEventListener('click', async () => {
     const messageInput = document.getElementById('messageInput');
