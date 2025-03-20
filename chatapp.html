@@ -53,10 +53,11 @@
 </head>
 <body>
 <div class="main">
-<div id="contacts"></div>
-<div id="chatwindow">
+    <select id="contacts"></select>
+    <div id="chatWindow"></div>
     <input type="text" id="messageInput" placeholder="Type your message here...">
-</div>
+    <input type="file" id="fileInput">
+    <button id="sendButton">Send</button>
 </div>
 <script src="https://cdn.jsdelivr.net/npm/appwrite@17.0.0">
     console.log(window.Appwrite);
