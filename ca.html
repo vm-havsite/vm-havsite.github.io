@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>HavChat</title>
+    <meta charset="UTF-8">
+    <meta http-equiv=”refresh” content=”5″>
+    <meta name="viewport" content="width=device-width, initial-scale=1" decription="chat app by havsite">
+    <link rel="icon" type="image/x-icon" href="images/logo_og.png">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            background-color: #f0f2f5;
+        }
+        .container {
+            display: flex;
+            width: 90%;
+            max-width: 900px;
+            height: 80vh;
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+        .contacts {
+            width: 30%;
+            background: #ededed;
+            overflow-y: auto;
+            padding: 10px;
+        }
+        .contact-item {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            border-bottom: 1px solid #ccc;
+            cursor: pointer;
+        }
+        .contact-item:hover {
+            background: #ddd;
+        }
+        .chat {
+            width: 70%;
+            display: flex;
+            flex-direction: column;
+            padding: 10px;
+        }
+        #chatWindow {
+            flex-grow: 1;
+            background: #fff;
+            padding: 10px;
+            overflow-y: auto;
+            border-bottom: 1px solid #ccc;
+        }
+        .message-input {
+            display: flex;
+            padding: 10px;
+        }
+        #messageInput {
+            flex-grow: 1;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            outline: none;
+        }
+        button {
+            padding: 10px;
+            margin-left: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="contacts" id="contactsList"></div>
+        <div class="chat">
+            <div id="chatWindow"></div>
+            <div class="message-input">
+                <input type="text" id="messageInput" placeholder="Type your message...">
+                <button id="sendButton">Send</button>
+            </div>
+        </div>
+    </div>
+
+<script type="module">
+import { getAuth, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js';
+import { getFirestore, doc, getDoc, collection, getDocs, addDoc, query, orderBy, onSnapshot } from 'https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js';
+import { app, db } from './firebase_auth.js';
+const auth = getAuth(app);
+
+let username = '';
+let currentChat = '';
+
+onAuthStateChanged(auth, async (user) => {
+    if (user) {
+        const userDoc = await getDoc(doc(db, "users", user.uid));
+        if (userDoc.exists()) {
+            username = userDoc.data().username;
+            loadContacts();
+        }
+    } else {
+        window.location.href = "auth ui.html";
+    }
+});
+
+async function loadContacts() {
+    const querySnapshot = await getDocs(collection(db, "users"));
+    const contactsList = document.getElementById("contactsList");
+    contactsList.innerHTML = "";
+    querySnapshot.forEach((doc) => {
+        const userData = doc.data();
+        let contactDiv = document.createElement("div");
+        contactDiv.classList.add("contact-item");
+        contactDiv.textContent = userData.username;
+        contactDiv.addEventListener("click", () => {
+            currentChat = userData.username;
+            listenForMessages();
+        });
+        contactsList.appendChild(contactDiv);
+    });
+}
+
+function listenForMessages() {
+    const chatId = getChatId(username, currentChat);
+    const messagesRef = collection(db, `chats/${chatId}/messages`);
+    const q = query(messagesRef, orderBy('timestamp'));
+    onSnapshot(q, (snapshot) => {
+        const messages = snapshot.docs.map(doc => doc.data());
+        displayMessages(messages);
+    });
+}
+
+function displayMessages(messages) {
+    const chatWindow = document.getElementById('chatWindow');
+    chatWindow.innerHTML = messages
+        .map(m => `<p><strong>${m.sender}:</strong> ${m.message}</p>`)
+        .join('');
+    chatWindow.scrollTop = chatWindow.scrollHeight;
+}
+
+document.getElementById('sendButton').addEventListener('click', async () => {
+    const messageInput = document.getElementById('messageInput');
+    const message = messageInput.value.trim();
+    if (message) {
+        const chatId = getChatId(username, currentChat);
+        await addDoc(collection(db, `chats/${chatId}/messages`), {
+            sender: username,
+            receiver: currentChat,
+            message: message,
+            timestamp: new Date()
+        });
+        messageInput.value = '';
+    }
+});
+
+function getChatId(user1, user2) {
+    return [user1, user2].sort().join('_');
+}
+</script>
+</body>
+</html>
