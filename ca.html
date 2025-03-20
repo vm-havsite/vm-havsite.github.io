@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" decription="chat app by havsite">
     <link rel="icon" type="image/x-icon" href="images/logo_og.png">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=send" />
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=attach_file" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -93,13 +93,6 @@
             'GRAD' 0,
             'opsz' 24
 }
-.attachfileicon {
-  font-variation-settings:
-  'FILL' 0,
-  'wght' 400,
-  'GRAD' 0,
-  'opsz' 24
-}
     </style>
 </head>
 <body>
@@ -109,9 +102,7 @@
             <div id="chatWindow"></div>
             <div class="message-input">
                 <input type="text" id="messageInput" placeholder="Type your message...">
-                <button><input type="file" id="fileInput" hidden><span class="attachfileicon">
-                    attach_file
-                    </span></button>
+                <button><input type="file" id="fileInput"><i class="fa fa-paperclip"></i></button>
                 <button id="sendButton"><span class="material-symbols-outlined">
                     send
                     </span></button>
