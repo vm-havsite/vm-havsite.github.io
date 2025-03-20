@@ -98,7 +98,7 @@
     
                 querySnapshot.forEach((doc) => {
                     const userData = doc.data();
-                    let option = document.createElement("span");
+                    let option = document.createElement("button");
                     option.value = userData.username;
                     option.textContent = userData.username;
                     contactsSelect.appendChild(option);
