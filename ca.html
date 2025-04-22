@@ -93,16 +93,6 @@
             'GRAD' 0,
             'opsz' 24
        }
-	#delete-icon{
-	    opacity: 0%;
-	    height: 5px;
-	    width: 5px
-        }
-	.message:hover{
-            #delete-icon{
-	        opacity:100%
-	    }
-	}
     </style>
 </head>
 <body>
@@ -180,7 +170,7 @@ function displayMessages(messages) {
                                 return `<p class="un"><strong>${m.sender}:</strong> <a href="${m.fileUrl}" target="_blank">📁 File Attachment</a></p>`;
                             }
                         }
-                        return `<p class="message"><strong>${m.sender}:</strong> ${m.message}</p><i class="fa fa-trash" id="delete-icon">`;
+                        return `<p><strong>${m.sender}:</strong> ${m.message}</p>`;
                     })
                     .join('');
             }
