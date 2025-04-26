@@ -81,6 +81,18 @@
         transform: scale(1.1);
     }
 
+    .topnav .logo {
+        padding: 6px 16px;
+    }
+
+    .topnav .logo img {
+        transition: transform 0.3s ease;
+    }
+
+    .topnav .logo:hover img {
+        transform: scale(1.1);
+    }
+
     /* Featured content */
     .features-grid {
         display: grid;
