@@ -64,7 +64,7 @@
     }
 
     .topnav .logo img {
-        transition: transform 0.3s ease;
+        transform: transform 0.3s ease;
     }
 
     .topnav .logo img:hover {
