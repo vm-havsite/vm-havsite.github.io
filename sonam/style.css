@@ -93,6 +93,10 @@
         transition: transform 0.3s ease;
     }
 
+    .topnav .logo img {
+    	transition: transform 0.3s ease; /* Tell it to smoothly transition */
+    }
+
     .topnav .logo:hover img {
         transform: scale(1.1);
     }
