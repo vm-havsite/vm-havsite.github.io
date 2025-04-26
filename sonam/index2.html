@@ -98,21 +98,6 @@
     </a>
     
     <script>
-
-        // Search functionality
-        function searchFunction() {
-            var searchTerm = document.getElementById('searchInput').value.toLowerCase();
-            const pages = {
-                "profiles": "https://vm-havsite.github.io/cst"
-            };
-            
-            if (pages[searchTerm]) {
-                window.location.href = pages[searchTerm];
-            } else {
-                alert("No results found for: " + searchTerm);
-            }
-        }
-
         // Back to top button functionality
         window.addEventListener('scroll', function() {
             var backToTopButton = document.getElementById('backToTop');
