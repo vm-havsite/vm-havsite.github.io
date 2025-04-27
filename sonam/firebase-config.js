@@ -9,7 +9,7 @@ const firebaseConfig = {
     projectId: "fms-exhibition2025",
     storageBucket: "fms-exhibition2025.firebasestorage.app",
     messagingSenderId: "893953950553",
-    appId: "1:893953950553:web:bdab7e8bbc25966f5d0248","
+    appId: "1:893953950553:web:bdab7e8bbc25966f5d0248",
 };
 
 // Initialize Firebase
