@@ -168,11 +168,11 @@
 
     /* Footer */
     footer {
-        background: var(--primary-gradient);
-        color: white;
-        text-align: center;
-        padding: 30px 20px;
-        margin-top: 40px;
+        background: var(--primary-gradient) !important;
+        color: white !important;
+        text-align: center !important;
+        padding: 30px 20px !important;
+        margin-top: 40px !important;
     }
 
     .footer-content {
@@ -204,7 +204,7 @@
         left: 0;
         width: 50px;
         height: 3px;
-        background: rgba(255, 255, 255, 0.5);
+        background: rgba(255, 255, 255, 0.5) !important;
     }
 
     .footer-links {
@@ -217,14 +217,14 @@
     }
 
     .footer-links a {
-        color: rgba(255, 255, 255, 0.8);
-        text-decoration: none;
-        transition: color 0.3s ease;
+        color: rgba(255, 255, 255, 0.8) !important;
+        text-decoration: none !important;
+        transition: color 0.3s ease !important;
     }
 
     .footer-links a:hover {
-        color: white;
-        text-decoration: underline;
+        color: white !important;
+        text-decoration: underline ;
     }
 
     .social-icons {
@@ -234,14 +234,14 @@
     }
 
     .social-icons a {
-        color: white;
-        font-size: 20px;
-        transition: transform 0.3s ease;
-        display: inline-block;
+        color: white !important;
+        font-size: 20px !important;
+        transition: transform 0.3s ease !important;
+        display: inline-block !important;
     }
 
     .social-icons a:hover {
-        transform: translateY(-5px);
+        transform: translateY(-5px) !important;
     }
 
     /* Back to top button */
