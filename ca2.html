@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Document</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        min-height: 100vh;
+        margin: 0;
+        background-color: #f0f2f5;
+    }
+    .container {
+        display: flex;
+        width: 90%;
+        max-width: 900px;
+        height: 80vh;
+        background: white;
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+    .contact-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #eee;
+  padding: 0.6rem;
+  margin: 0.3rem 0;
+  border-radius: 8px;
+  transition: background 0.2s ease;
+}
+
+.contact-item:hover {
+  background-color: #ddd;
+}
+
+.contact-name {
+  flex: 1;
+  font-weight: 500;
+}
+
+.delete-btn {
+  background: #ff4d4d;
+  border: none;
+  color: white;
+  border-radius: 50%;
+  font-size: 1rem;
+  width: 26px;
+  height: 26px;
+  cursor: pointer;
+  line-height: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.delete-btn:hover {
+  background: #e60000;
+}
+
+    .chat {
+        width: 70%;
+        display: flex;
+        flex-direction: column;
+        padding: 10px;
+    }
+    #chatWindow {
+        flex-grow: 1;
+        background: #fff;
+        padding: 10px;
+        overflow-y: auto;
+        border-bottom: 1px solid #ccc;
+    }
+    .message-input {
+        display: flex;
+        padding: 10px;
+    }
+    #messageInput {
+        flex-grow: 1;
+        padding: 10px;
+        border-radius: 5px;
+        border: 1px solid #ccc;
+        outline: none;
+    }
+    button {
+        padding: 10px;
+        margin-left: 10px;
+        background-color: #4CAF50;
+        color: white;
+        border: none;
+        cursor: pointer;
+        border-radius: 20px;
+    }
+    button:hover {
+        background-color: #45a049;
+    }
+    .un{
+        font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+        font-size: 20px;
+        color: #100028;
+    }
+    .material-symbols-outlined {
+        font-variation-settings:
+        'FILL' 0,
+        'wght' 400,
+        'GRAD' 0,
+        'opsz' 24
+   }
+   .add-contact-container {
+  background-color: #f9f9f9;
+  padding: 1rem;
+  border-radius: 10px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  width: 90%;
+  max-width: 300px;
+  margin: 1rem auto;
+  text-align: center;
+  font-family: sans-serif;
+}
+
+#addContactForm input {
+  padding: 0.5rem;
+  width: 80%;
+  margin-bottom: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+}
+
+#addContactForm button {
+  padding: 0.5rem 1rem;
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+#addContactForm button:hover {
+  background-color: #45a049;
+}
+
+#addContactMessage {
+  margin-top: 0.5rem;
+  font-size: 0.9rem;
+  color: #555;
+}
+
+</style>
+</head>
+<body>
+    <div class="container">
+        <div class="contacts" id="contactsList"></div>
+        <div class="chat">
+            <div id="chatWindow"></div>
+            <div class="message-input">
+                <input type="text" id="messageInput" placeholder="Type your message...">
+                <button><input type="file" id="fileInput"><i class="fa fa-paperclip"></i></button>
+                <button id="sendButton"><span class="material-symbols-outlined">
+                    send
+                    </span></button>
+            </div>
+        </div>
+    </div>
+    <div class="add-contact-container">
+        <h3>Add a Contact</h3>
+        <form id="addContactForm">
+          <input type="text" id="contactUsername" placeholder="Enter username" required />
+          <button type="submit">Add</button>
+        </form>
+        <p id="addContactMessage"></p>
+      </div>
+      
+
+<script type="module">
+    import { getAuth, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js';
+    import { getFirestore, doc, getDoc, collection, getDocs, addDoc, query, orderBy, onSnapshot, where } from 'https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js';
+    import { app, db } from './firebase_auth.js';
+    const auth = getAuth(app);
+    
+    let username = '';
+    let currentChat = '';
+    
+    onAuthStateChanged(auth, async (user) => {
+        if (user) {
+            const userDoc = await getDoc(doc(db, "users", user.uid));
+            if (userDoc.exists()) {
+                username = userDoc.data().username;
+                loadContacts();
+            }
+        } else {
+            window.location.href = "auth ui.html";
+        }
+    });
+    
+    
+async function addContact(contactUsername) {
+    try {
+        // Step 1: Search for the user by username
+        const usersRef = collection(db, "users");
+        const q = query(usersRef, where("username", "==", contactUsername));
+        const querySnapshot = await getDocs(q);
+
+        if (querySnapshot.empty) {
+            alert("User not found!");
+            return;
+        }
+
+        // Step 2: Add to current user's contacts
+        const userDoc = querySnapshot.docs[0]; // Assume first match
+        const contactData = userDoc.data();
+        const userId = auth.currentUser.uid;
+        const contactsRef = collection(db, "users", userId, "contacts");
+
+        // Optional: Check if already added (you can expand later)
+
+        await addDoc(contactsRef, {
+            username: contactData.username,
+            email: contactData.email,
+            uid: userDoc.id
+        });
+
+        alert("Contact added successfully!");
+
+    } catch (error) {
+        console.error("Error adding contact: ", error);
+        alert("Something went wrong.");
+    }
+}
+
+async function loadContacts() {
+    const auth = getAuth();
+    const currentUser = auth.currentUser;
+    if (!currentUser) return;
+
+    const contactsList = document.getElementById("contactsList");
+    contactsList.innerHTML = "";
+
+    const contactsRef = collection(db, "users", currentUser.uid, "contacts");
+    const querySnapshot = await getDocs(contactsRef);
+
+    querySnapshot.forEach((docSnap) => {
+        const contactData = docSnap.data();
+        const contactDiv = document.createElement("div");
+        contactDiv.classList.add("contact-item");
+
+        const nameSpan = document.createElement("span");
+        nameSpan.textContent = contactData.username;
+        nameSpan.classList.add("contact-name");
+
+        const deleteBtn = document.createElement("button");
+        deleteBtn.textContent = "×";
+        deleteBtn.classList.add("delete-btn");
+        deleteBtn.title = "Delete contact";
+        deleteBtn.onclick = async () => {
+            await deleteDoc(doc(db, "users", currentUser.uid, "contacts", docSnap.id));
+            loadContacts(); // Refresh after deletion
+        };
+
+        contactDiv.appendChild(nameSpan);
+        contactDiv.appendChild(deleteBtn);
+        contactsList.appendChild(contactDiv);
+    });
+}
+
+
+    
+    function listenForMessages() {
+        const chatId = getChatId(username, currentChat);
+        const messagesRef = collection(db, `chats/${chatId}/messages`);
+        const q = query(messagesRef, orderBy('timestamp'));
+        onSnapshot(q, (snapshot) => {
+            const messages = snapshot.docs.map(doc => doc.data());
+            displayMessages(messages);
+        });
+    }
+    function displayMessages(messages) {
+                    const chatWindow = document.getElementById('chatWindow');
+                    chatWindow.innerHTML = messages
+                        .map(m => {
+                            if (m.fileUrl) {
+                                const fileExtension = m.fileUrl.split('.').pop().toLowerCase();
+                                const imageExtensions = ['jpg', 'jpeg', 'png', 'gif', 'bmp', 'webp'];
+                                if (imageExtensions.includes(fileExtension)) {
+                                    return `<div class="un"><strong>${m.sender}:</strong> <img src="${m.fileUrl}" alt="Image" style="max-width: 100%; height: auto;"></div>`;
+                                } else {
+                                    return `<p class="un"><strong>${m.sender}:</strong> <a href="${m.fileUrl}" target="_blank">📁 File Attachment</a></p>`;
+                                }
+                            }
+                            return `<p><strong>${m.sender}:</strong> ${m.message}</p>`;
+                        })
+                        .join('');
+                }
+    
+    document.getElementById('sendButton').addEventListener('click', async () => {
+        const messageInput = document.getElementById('messageInput');
+        const message = messageInput.value.trim();
+        if (message) {
+            const chatId = getChatId(username, currentChat);
+            await addDoc(collection(db, `chats/${chatId}/messages`), {
+                sender: username,
+                receiver: currentChat,
+                message: message,
+                timestamp: new Date()
+            });
+            messageInput.value = '';
+        }
+    });
+    
+    function getChatId(user1, user2) {
+        return [user1, user2].sort().join('_');
+    }
+    </script>
+</body>
+</html>
