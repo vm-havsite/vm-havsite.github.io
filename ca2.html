@@ -198,6 +198,19 @@
             window.location.href = "auth ui.html";
         }
     });
+
+// Listen for form submission
+document.getElementById("addContactForm").addEventListener("submit", async (e) => {
+    e.preventDefault(); // Prevent page reload
+    const input = document.getElementById("contactUsername");
+    const usernameToAdd = input.value.trim();
+    if (usernameToAdd) {
+        await addContact(usernameToAdd);
+        input.value = ''; // Clear input after adding
+        loadContacts(); // Refresh contact list
+    }
+});
+
     
     
 async function addContact(contactUsername) {
