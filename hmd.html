@@ -1,56 +1,59 @@
+<!DOCTYPE html>
 <html>
 <head>
-<title></title>
-<style>
-    body{
-        background-color: linear-gradient(135deg, #81FFEF, #F067B4);
-    }
-    .wrapper{
-        width: 50%;
-        height: 80vh;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        margin-top: 10vh;
-        margin-left: 25%;
-        border-radius: 4px;
-        background-color: rgb(230, 243, 255);
-    }
-    .h1{
-        font-size: 50px;
-        color: #F067B4;
-        text-align: center;
-        font-family: 'Courier New', Courier, monospace;
-        text-shadow: 2px 2px 4px #000000;
-    }
-    .h1:hover{
-        color: #81FFEF;
-        text-shadow: 2px 2px 4px #F067B4;
-        transition: all 0.5s ease-in-out;
-    }
-    .img{
-        width: 50%;
-        height: 50%;
-        border-radius: 4px;
-        box-shadow: 0px 0px 10px #000000;
-        transition: all 0.5s ease-in-out;
-        align-self: center;
-    }
-    .img:hover{
-        transform: scale(1.1);
-        box-shadow: 0px 0px 20px #F067B4;
-    }
-</style>
+    <title>Mother's Day Greeting</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #81FFEF, #F067B4);
+            font-family: 'Courier New', Courier, monospace;
+        }
+        .wrapper {
+            width: 50%;
+            height: 80vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            margin: 10vh auto 0 auto;
+            border-radius: 4px;
+            background-color: rgb(230, 243, 255);
+        }
+        #heading {
+            font-size: 50px;
+            color: #F067B4;
+            text-align: center;
+            text-shadow: 2px 2px 4px #000000;
+        }
+        #heading:hover {
+            color: #81FFEF;
+            text-shadow: 2px 2px 4px #F067B4;
+            transition: all 0.5s ease-in-out;
+        }
+        #image {
+            width: 50%;
+            height: auto;
+            border-radius: 4px;
+            box-shadow:  0px 0px 20px #F067B4;
+            transition: all 0.5s ease-in-out;
+            margin-top: 20px;
+        }
+        #image:hover {
+            transform: scale(1.1);
+            box-shadow: 0px 0px 20px #F067B4;
+        }
+    </style>
 </head>
 <body>
     <div class="wrapper">
-        <h1 class="h1"></h1>
-        <img class="img" src="">
+        <h1 id="heading"></h1>
+        <img id="image" src="" alt="Mother's Day Image">
     </div>
     <script>
-        function content(){
-            document.getElementById("h1").innerHTML="Happy Mother's Day!";
-            document.getElementById("img").src="images/img.jpg";
+        function content() {
+            document.getElementById("heading").innerHTML = "Happy Mother's Day!";
+            document.getElementById("image").src = "images/img.jpeg";
         }
         setTimeout(content, 1000);
     </script>
