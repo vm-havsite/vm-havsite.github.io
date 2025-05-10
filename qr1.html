@@ -66,7 +66,7 @@
 <body>
   <header>Plant Info</header>
   <div class="main">
-    <button class="qr-button" onclick="startScanner()"><i icon-name="camera"</button>
+    <button class="qr-button" onclick="startScanner()"><i icon-name="camera"></i>	</button>
     <div id="qr-reader"></div>
     <div class="plant-info" id="plantInfo"></div>
   </div>
@@ -86,7 +86,10 @@ const firebaseConfig = {
     firebase.initializeApp(firebaseConfig);
     const db = firebase.firestore();
 
+
 //QR-Scanner logic
+const qrReader = new Html5Qrcode("qr-reader");
+
 async function startScanner() {
   const qrBox = document.getElementById("qr-reader");
   const infoBox = document.getElementById("plantInfo");
@@ -146,7 +149,7 @@ async function startScanner() {
 }
 
   </script>
-<script>
+<script type="module">
 // this script imports icons from lucide and is purely for ui
 
 // Recommended way, to include only the icons you need. - by lucide.documentation at "https://lucide.dev/guide/packages/lucide"
