@@ -91,6 +91,7 @@
   <div class="main">
     <button class="qr-button" onclick="startScanner()"><i data-lucide="camera"></i></button>
     <div id="qr-reader">
+      <p class="waittext"></p>
       <div class="scan-line"></div>
     </div>
 
@@ -117,6 +118,7 @@
 
     async function startScanner() {
       document.querySelector(".scan-line").style.display = "block";
+      document.getElementById("waittext").innerHTML="scanning...";
       const qrBox = document.getElementById("qr-reader");
       const infoBox = document.getElementById("plantInfo");
 
@@ -133,6 +135,7 @@
             clearTimeout(scanTimeout); // Cancel timeout if QR is detected
             await qrReader.stop();	
             document.querySelector(".scan-line").style.display = "none";
+            document.getElementById("waittext").innerHTML="";
             qrBox.style.display = "none";
             infoBox.innerText = "Fetching plant info...";
 
