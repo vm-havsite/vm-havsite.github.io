@@ -108,7 +108,7 @@ const firebaseConfig = {
               const data = snapshot.data();
               document.getElementById("plantInfo").innerHTML = `
                 <h2>${data.name}</h2>
-                <p><strong>Age:</strong> ${data.age}</p>
+                <p><strong>Age:</strong> ${data.Age}</p>
                 <p><strong>Care Instructions:</strong> ${data['care instructions']}</p>
               `;
             } else {
