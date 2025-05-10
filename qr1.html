@@ -91,7 +91,7 @@
   <div class="main">
     <button class="qr-button" onclick="startScanner()"><i data-lucide="camera"></i></button>
     <div id="qr-reader">
-      <p class="waittext"></p>
+      <p id="waittext"></p>
       <div class="scan-line"></div>
     </div>
 
@@ -116,66 +116,69 @@
     // QR-Scanner logic
     const qrReader = new Html5Qrcode("qr-reader");
 
-    async function startScanner() {
-      document.querySelector(".scan-line").style.display = "block";
-      document.getElementById("waittext").innerHTML="scanning...";
-      const qrBox = document.getElementById("qr-reader");
-      const infoBox = document.getElementById("plantInfo");
+async function startScanner() {
+  document.querySelector(".scan-line").style.display = "block";
+  
+  const qrBox = document.getElementById("qr-reader");
+  const infoBox = document.getElementById("plantInfo");
 
-      qrBox.style.display = "block";
-      infoBox.innerText = "Scanning QR code...";
+  qrBox.style.display = "block";
+  infoBox.innerText = "Scanning QR code...";
 
-      let scanTimeout;
+  // Create a NEW scanner instance each time
+  const qrReader = new Html5Qrcode("qr-reader");
 
-      try {
-        await qrReader.start(
-          { facingMode: "environment" },
-          { fps: 10, qrbox: 250 },
-          async (qrCodeMessage) => {
-            clearTimeout(scanTimeout); // Cancel timeout if QR is detected
-            await qrReader.stop();	
-            document.querySelector(".scan-line").style.display = "none";
-            document.getElementById("waittext").innerHTML="";
-            qrBox.style.display = "none";
-            infoBox.innerText = "Fetching plant info...";
+  let scanTimeout;
 
-            const plantId = qrCodeMessage.trim();
-            const docRef = db.collection("Plant-Info").doc(plantId);
+  try {
+    await qrReader.start(
+      { facingMode: "environment" },
+      { fps: 10, qrbox: 250 },
+      async (qrCodeMessage) => {
+        clearTimeout(scanTimeout);
+        await qrReader.stop();
+        document.querySelector(".scan-line").style.display = "none";
+        qrBox.style.display = "none";
+        infoBox.innerText = "Fetching plant info...";
 
-            try {
-              const doc = await docRef.get();
-              if (doc.exists) {
-                const data = doc.data();
-                infoBox.innerHTML = `
-                  <h2>${data.name}</h2>
-                  <p><strong>Age:</strong> ${data.age}</p>
-                  <p><strong>Care Instructions:</strong> ${data["care instructions"]}</p>
-                `;
-              } else {
-                infoBox.innerText = "Plant not found.";
-              }
-            } catch (err) {
-              console.error("❌ Firestore Error:", err);
-              infoBox.innerText = "Error fetching plant data.";
-            }
-          },
-          (error) => {
-            // Optional: log frame-level scan errors
+        const plantId = qrCodeMessage.trim();
+        const docRef = db.collection("Plant-Info").doc(plantId);
+
+        try {
+          const doc = await docRef.get();
+          if (doc.exists) {
+            const data = doc.data();
+            infoBox.innerHTML = `
+              <h2>${data.name}</h2>
+              <p><strong>Age:</strong> ${data.age}</p>
+              <p><strong>Care Instructions:</strong> ${data["care instructions"]}</p>
+            `;
+          } else {
+            infoBox.innerText = "Plant not found.";
           }
-        );
-
-        // ⏱️ Timeout after 10 seconds
-        scanTimeout = setTimeout(async () => {
-          await qrReader.stop();
-          qrBox.style.display = "none";
-          infoBox.innerText = "No QR code detected. Please try again.";
-        }, 10000);
-
-      } catch (err) {
-        console.error("❌ QR Reader Error:", err);
-        infoBox.innerText = "Unable to start scanner.";
+        } catch (err) {
+          console.error("❌ Firestore Error:", err);
+          infoBox.innerText = "Error fetching plant data.";
+        }
+      },
+      (error) => {
+        // Frame scan errors — optional
       }
-    }
+    );
+
+    scanTimeout = setTimeout(async () => {
+      await qrReader.stop();
+      document.querySelector(".scan-line").style.display = "none";
+      qrBox.style.display = "none";
+      infoBox.innerText = "No QR code detected. Please try again.";
+    }, 10000);
+
+  } catch (err) {
+    console.error("❌ QR Reader Error:", err);
+    infoBox.innerText = "Unable to start scanner.";
+  }
+}
+
   </script>
 
   <script>
