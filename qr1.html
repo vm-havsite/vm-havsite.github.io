@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#4CAF50" />
+  <link rel="manifest" href="manifest.json" />
+  <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore-compat.js"></script>
+  <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <title>Plant Info</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      padding: 0;
+      margin: 0;
+      background: #e6ffe6;
+      color: #333;
+    }
+    header {
+      background-color: #4CAF50;
+      color: white;
+      padding: 15px;
+      text-align: center;
+      font-size: 1.5em;
+      font-weight: bold;
+    }
+    .main {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: calc(100vh - 60px);
+      text-align: center;
+      padding: 20px;
+    }
+    #qr-reader {
+      width: 300px;
+      margin: 20px auto;
+      display: none;
+    }
+    .plant-info {
+      background: #fff;
+      border-radius: 10px;
+      padding: 20px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+      max-width: 400px;
+      margin-top: 20px;
+      transition: all 0.3s ease;
+    }
+    .qr-button {
+      font-size: 48px;
+      cursor: pointer;
+      color: #4CAF50;
+      background: none;
+      border: none;
+      margin-top: 20px;
+      transition: transform 0.2s;
+    }
+    .qr-button:hover {
+      transform: scale(1.1);
+    }
+  </style>
+</head>
+<body>
+  <header>Plant Info</header>
+  <div class="main">
+    <button class="qr-button" onclick="startScanner()"><i icon-name="camera"</button>
+    <div id="qr-reader"></div>
+    <div class="plant-info" id="plantInfo"></div>
+  </div>
+
+  <script>
+    // Firebase config
+const firebaseConfig = {
+  apiKey: "AIzaSyDerZgIyt6MlVD-j_dGvyGRnyVOj1LrNIw",
+  authDomain: "fms-exhibition2025.firebaseapp.com",
+  projectId: "fms-exhibition2025",
+  storageBucket: "fms-exhibition2025.firebasestorage.app",
+  messagingSenderId: "893953950553",
+  appId: "1:893953950553:web:7ec025da3c33ab495d0248",
+};
+
+// Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+
+//QR-Scanner logic
+async function startScanner() {
+  const qrBox = document.getElementById("qr-reader");
+  const infoBox = document.getElementById("plantInfo");
+
+  qrBox.style.display = "block";
+  infoBox.innerText = "Scanning QR code...";
+
+  let scanTimeout;
+
+  try {
+    await qrReader.start(
+      { facingMode: "environment" },
+      { fps: 10, qrbox: 250 },
+      async (qrCodeMessage) => {
+        clearTimeout(scanTimeout); // Cancel timeout if QR is detected
+        await qrReader.stop();
+        qrBox.style.display = "none";
+        infoBox.innerText = "Fetching plant info...";
+
+        const plantId = qrCodeMessage.trim();
+        const docRef = db.collection("Plant-Info").doc(plantId);
+
+        try {
+          const doc = await docRef.get();
+          if (doc.exists) {
+            const data = doc.data();
+            infoBox.innerHTML = `
+              <h2>${data.name}</h2>
+              <p><strong>Age:</strong> ${data.age}</p>
+              <p><strong>Care Instructions:</strong> ${data["care instructions"]}</p>
+            `;
+          } else {
+            infoBox.innerText = "Plant not found.";
+          }
+        } catch (err) {
+          console.error("❌ Firestore Error:", err);
+          infoBox.innerText = "Error fetching plant data.";
+        }
+      },
+      (error) => {
+        // You can log scan errors but don’t show every frame’s error
+        // console.warn("QR Scan Error:", error);
+      }
+    );
+
+    // ⏱️ Timeout after 10 seconds
+    scanTimeout = setTimeout(async () => {
+      await qrReader.stop();
+      qrBox.style.display = "none";
+      infoBox.innerText = "No QR code detected. Please try again.";
+    }, 10000); // 10 seconds
+
+  } catch (err) {
+    console.error("❌ QR Reader Error:", err);
+    infoBox.innerText = "Unable to start scanner.";
+  }
+}
+
+  </script>
+<script>
+// this script imports icons from lucide and is purely for ui
+
+// Recommended way, to include only the icons you need. - by lucide.documentation at "https://lucide.dev/guide/packages/lucide"
+import { createIcons, camera } from 'lucide';
+
+createIcons({
+  icons: {
+    camera
+  }
+nameAttr: 'icon-name'
+});
+</script>
+</body>
+</html>

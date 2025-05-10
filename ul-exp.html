@@ -322,6 +322,10 @@
             box-sizing: border-box;
         }
     }
+
+        .hidden {
+            display: none;
+        }
     </style>
 </head>
 <body>
@@ -342,9 +346,6 @@
         <a href="cst.html" title="Profile">
             <img src="images/user.png" style="height:24px; width:24px; border-radius:50%;">
         </a>
-        <button class="theme-toggle" id="themeToggle" title="Toggle theme" onclick="toggleTheme()">
-            <i class="fas fa-moon"></i>
-        </button>
         <div class="search-bar">
             <input type="text" id="searchInput" placeholder="Search...">
             <button onclick="searchFunction()"><i class="fas fa-search"></i></button>
@@ -402,9 +403,15 @@
         <p class="login-link">Already have an account? <a onclick="toggleForms()">Login</a></p>
     </div>
 
+        <div id="profile" class="hidden">
+            <h2>Welcome, <span id="displayUsername"></span>!</h2>
+            <p>Email: <span id="displayEmail"></span></p>
+            <im id="profilePic" src="images/user.png" alt="Profile Picture">
+            <button id="signOutButton">Sign Out</button>
+        </div>
+
       <script type="module" src="appwrite-auth.js"></script>
-    <!-- Include external JS file -->
-    <script src="myscript.js"></script>
+
     
     <script>
         // Toggle mobile navigation
@@ -442,16 +449,6 @@
             }
         }
 
-        // Back to top button functionality
-        window.addEventListener('scroll', function() {
-            var backToTopButton = document.getElementById('backToTop');
-            if (window.pageYOffset > 300) {
-                backToTopButton.classList.add('visible');
-            } else {
-                backToTopButton.classList.remove('visible');
-            }
-        });
-
         // Enable Enter key for search
         document.getElementById("searchInput").addEventListener("keypress", function(event) {
             if (event.key === "Enter") {
@@ -459,14 +456,6 @@
             }
         });
         
-        // Update theme toggle icon on page load
-        document.addEventListener('DOMContentLoaded', () => {
-            if (document.getElementById('html-root').classList.contains('dark-mode')) {
-                document.getElementById('themeToggle').innerHTML = '<i class="fas fa-sun"></i>';
-            } else {
-                document.getElementById('themeToggle').innerHTML = '<i class="fas fa-moon"></i>';
-            }
-        });
     </script>
     <script>
         function toggleForms() {
@@ -493,18 +482,63 @@
         // Signup Form Handling
         document.getElementById('signupForm').addEventListener('submit', function(e) {
             e.preventDefault();
-            
-            const username = document.querySelector('#signupForm input[type="text"]').value;
-            const email = document.querySelector('#signupForm input[type="email"]').value;
-            const phone = document.querySelector('#signupForm input[type="tel"]').value;
-            const password = document.querySelector('#signupForm input[type="password"]').value;
 
-            if(username && email && phone && password) {
-                alert('Account created successfully!');
-            } else {
-                alert('Please fill in all fields');
-            }
+    </script>
+    <script  defer loading="eager">
+        document.getElementById('loginForm').addEventListener('submit', function(event) {
+            event.preventDefault(); // Prevent form submission
+
+            // Get user input
+            const username = document.getElementById('signup-name').value;
+            const email = document.getElementById('signup-email').value;
+            const password = document.getElementById('signup-password').value;
+
+            // Set cookies
+            document.cookie = `username=${username}; path=/; max-age=2840000000`; // 90.055 years
+            document.cookie = `email=${email}; path=/; max-age=2840000000`; // 90.055 years
+            document.cookie = `password=${password}; path=/; max-age=2840000000`; // 90.055 years
+
+            // Display user profile
+            displayProfile();
         });
+
+        function displayProfile() {
+            const cookies = document.cookie.split('; ');
+            let username, email, profilePic;
+
+            cookies.forEach(cookie => {
+                const [key, value] = cookie.split('=');
+                if (key === 'username'){
+		username = value;
+		document.getElementById('signin-email').innerHTML= username;
+		}
+                if (key === 'password'){ 
+		password = value;
+		document.getElementById('signin-password').innerHTML= password;
+		}
+            });
+
+            if (username && email) {
+                document.getElementById('displayUsername').innerText = username;                document.getElementById('displayEmail').innerText = email;
+                document.getElementById('profile').classList.remove('hidden');
+                document.getElementById('loginForm').classList.add('hidden');
+            }
+        }
+
+        // Sign Out functionality
+        document.getElementById('signOutButton').addEventListener('click', function() {
+            // Clear cookies
+            document.cookie = "username=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+            document.cookie = "email=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+            document.cookie = "profilePic=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+
+        // Check for existing cookies on page load
+        window.onload = function() {
+            displayProfile();
+        };
+
+        //autofill form
+	
     </script>
 </body>
 </html>
