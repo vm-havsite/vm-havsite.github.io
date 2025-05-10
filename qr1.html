@@ -39,6 +39,8 @@
       width: 300px;
       margin: 20px auto;
       display: none;
+      position: relative;
+      overflow: hidden;
     }
     .plant-info {
       background: #fff;
@@ -61,6 +63,24 @@
     .qr-button:hover {
       transform: scale(1.1);
     }
+
+.scan-line {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 2px;
+  width: 100%;
+  background: red;
+  animation: scanMove 1.5s linear infinite;
+  z-index: 10;
+}
+
+@keyframes scanMove {
+  0% { top: 0; }
+  50% { top: 100%; }
+  100% { top: 0; }
+}
+
   </style>
 </head>
 <body>
@@ -68,6 +88,10 @@
   <div class="main">
     <button class="qr-button" onclick="startScanner()"><i data-lucide="camera"></i></button>
     <div id="qr-reader"></div>
+    <div id="qr-reader">
+      <div class="scan-line"></div>
+    </div>
+
     <div class="plant-info" id="plantInfo"></div>
   </div>
 
