@@ -91,7 +91,6 @@
   <div class="main">
     <button class="qr-button" onclick="startScanner()"><i data-lucide="camera"></i></button>
     <div id="qr-reader">
-      <p id="waittext"></p>
       <div class="scan-line"></div>
     </div>
 
@@ -171,6 +170,9 @@ async function startScanner() {
       document.querySelector(".scan-line").style.display = "none";
       qrBox.style.display = "none";
       infoBox.innerText = "No QR code detected. Please try again.";
+      scanTimeout = setTimeout(async () => {
+         window.location.href="https://vm-havsite.github.io/qr1";
+      }, 6000);
     }, 10000);
 
   } catch (err) {
