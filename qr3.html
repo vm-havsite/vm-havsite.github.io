@@ -90,16 +90,16 @@
     <div id="qr-reader"></div>
     <div class="plant-info" id="plantInfo"></div>
   </div>
-  <divv id="ap" class=""></div>
+  <div id="ap"></div>
 
 <script>
   const firebaseConfig = {
-    apiKey: "AIzaSyDerZgIyt6MlVD-j_dGvyGRnyVOj1LrNIw",
-    authDomain: "fms-exhibition2025.firebaseapp.com",
-    projectId: "fms-exhibition2025",
-    storageBucket: "fms-exhibition2025.firebasestorage.app",
-    messagingSenderId: "893953950553",
-    appId: "1:893953950553:web:7ec025da3c33ab495d0248",
+    apiKey: "",
+    authDomain: "",
+    projectId: "",
+    storageBucket: "", 
+    messagingSenderId: "", 
+    appId: "",
   };
 
   firebase.initializeApp(firebaseConfig);
@@ -155,15 +155,18 @@
       document.getElementById("plantInfo").innerText = "No QR code detected. Please try again.";
     }, 10000);
   }
+
+  lucide.createIcons();
+
+  function addplantpopup(){
+    document.querySelector('#ap').classList.add('addplant');
+    document.querySelector('#ap').innerHTML =  `<button onclick="removepopup()">rm</button>`;
+  }
+
+  function removepopup(){
+    document.querySelector('#ap').classList.remove('addplant');
+    document.querySelector('#ap').innerHTML = '';
+  }
 </script>
-
-
-  <script>
-    lucide.createIcons();
-
-    function addplantpopup(){
-      document.querySelector('ap').classList.add('addplant');
-      document.querySelector('elementSelector').innerHTML=  `<button onclick="removepopup()">rm</button>`;
-  </script>
 </body>
 </html>
