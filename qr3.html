@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#4CAF50" />
+  <link rel="manifest" href="manifest.json" />
+  <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore-compat.js"></script>
+  <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <title>Plant Info</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      padding: 0;
+      margin: 0;
+      background: #e6ffe6;
+      color: #333;
+    }
+    header {
+      background-color: #4CAF50;
+      color: white;
+      padding: 15px;
+      text-align: center;
+      font-size: 1.5em;
+      font-weight: bold;
+    }
+    .main {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: calc(100vh - 60px);
+      text-align: center;
+      padding: 20px;
+    }
+    #qr-reader {
+      width: 300px;
+      margin: 20px auto;
+      display: none;
+    }
+    .plant-info {
+      background: #fff;
+      border-radius: 10px;
+      padding: 20px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+      max-width: 400px;
+      margin-top: 20px;
+      transition: all 0.3s ease;
+    }
+    .qr-button {
+      font-size: 48px;
+      cursor: pointer;
+      color: #4CAF50;
+      background: none;
+      border: none;
+      margin-top: 20px;
+      transition: transform 0.2s;
+    }
+    .qr-button:hover {
+      transform: scale(1.1);
+    }
+    .addplantbutton{
+      position:absolute;
+      left: 2px;
+      top: 70px;
+      background: #4CAF50;
+      border-radius: 4px;
+      text: white;
+      font-size: 1em;
+      font-weight: bold;       
+      height: max-content;
+      width: max-content;
+    }
+    .addplant{
+      height: 50vh;
+      top: 25vh;
+      left: 25%;
+      width: 50%;
+      box-shadow: 0 30px 15px rgba(0,0,0,0.4);
+   }
+  </style>
+</head>
+<body>
+  <header>Plant Info</header>
+  <div class="main">
+    <button class="addplantbutton" onclick="addplantpopup()">add new plant</button>
+    <button class="qr-button" onclick="startScanner()"><i data-lucide="camera"></i></button>
+    <div id="qr-reader"></div>
+    <div class="plant-info" id="plantInfo"></div>
+  </div>
+  <divv id="ap" class=""></div>
+
+<script>
+  const firebaseConfig = {
+    apiKey: "AIzaSyDerZgIyt6MlVD-j_dGvyGRnyVOj1LrNIw",
+    authDomain: "fms-exhibition2025.firebaseapp.com",
+    projectId: "fms-exhibition2025",
+    storageBucket: "fms-exhibition2025.firebasestorage.app",
+    messagingSenderId: "893953950553",
+    appId: "1:893953950553:web:7ec025da3c33ab495d0248",
+  };
+
+  firebase.initializeApp(firebaseConfig);
+  const db = firebase.firestore();
+
+  const qrReader = new Html5Qrcode("qr-reader");
+  let scanTimeout;
+
+  async function startScanner() {
+    document.getElementById("plantInfo").innerHTML = "";
+    document.getElementById("qr-reader").style.display = "block";
+
+    // Clear previous timeout if any
+    if (scanTimeout) clearTimeout(scanTimeout);
+
+    qrReader.start(
+      { facingMode: "environment" },
+      { fps: 10, qrbox: 250 },
+      async (qrCodeMessage) => {
+        clearTimeout(scanTimeout); // stop timeout on successful scan
+
+        const plantId = qrCodeMessage.trim();
+        await qrReader.stop();
+        document.getElementById("qr-reader").style.display = "none";
+        document.getElementById("plantInfo").innerHTML = `<p>Loading plant info...</p>`;
+
+        try {
+          const snapshot = await db.collection("Plant-Info").doc(plantId).get();
+          if (snapshot.exists) {
+            const data = snapshot.data();
+            document.getElementById("plantInfo").innerHTML = `
+              <h2>${data.name}</h2>
+              <p><strong>Age:</strong> ${data.Age}</p>
+              <p><strong>Care Instructions:</strong> ${data['care instructions']}</p>
+            `;
+          } else {
+            document.getElementById("plantInfo").innerHTML = `<p>Plant not found.</p>`;
+          }
+        } catch (error) {
+          console.error("Error getting plant info:", error);
+          document.getElementById("plantInfo").innerHTML = `<p>Error fetching data.</p>`;
+        }
+      },
+      error => {
+        console.warn("QR Scan Error:", error);
+      }
+    );
+
+    // Stop scanner after 10 seconds if no QR is detected
+    scanTimeout = setTimeout(async () => {
+      await qrReader.stop();
+      document.getElementById("qr-reader").style.display = "none";
+      document.getElementById("plantInfo").innerText = "No QR code detected. Please try again.";
+    }, 10000);
+  }
+</script>
+
+
+  <script>
+    lucide.createIcons();
+
+    function addplantpopup(){
+      document.querySelector('ap').classList.add('addplant');
+      document.querySelector('elementSelector').innerHTML=  `<button onclick="removepopup()">rm</button>`;
+  </script>
+</body>
+</html>
