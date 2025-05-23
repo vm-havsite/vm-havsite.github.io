@@ -1,0 +1,18 @@
+<html>
+<head>
+<title></title>
+<head>
+<body>
+<input id="searchbar">
+<script type="module">
+  import Fuse from 'https://cdn.jsdelivr.net/npm/fuse.js@7.1.0/dist/fuse.mjs'
+  var searchquery = document.getElementById('searcbar').value
+       const data = [
+       { name: "havchat", age: 30 },
+       { name: "music", age: 25 },
+       { name: "arcticles", age: 35 }
+     ];
+   const fuse = new Fuse(data, { keys: ['name', 'age'] });
+     const results = fuse.search(searchquery);
+     console.log(results); // Displays the search results
+</script>
