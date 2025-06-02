@@ -1,18 +1,16 @@
 <!DOCTYPE html>
-<html lang="english" id="html-root">
+<html lang="en" id="html-root">
 <head>
-    <title>Havsite - Home</title>
+    <title>User Profile</title>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="Havsite - Connect with classmates and access the latest updates">
+    <meta http-equiv=”refresh” content=”5″>
+    <meta name="viewport" content="width=device-width, initial-scale=1" decription="homepage">
     <link rel="preconnect" href="https://cdnjs.cloudflare.com">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="icon" type="image/x-icon" href="images/logo_og.png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=National+Park&display=swap" rel="stylesheet">
 
 <style>
     /* Theme Variables */
@@ -562,115 +560,61 @@
             <span class="material-symbols-outlined">home</span>
         </a>
         <a href="cst.html" title="Profile">
-            <img src="images/user.png" alt="profile image" style="height:24px; width:24px; border-radius:50%;">
+            <img src="images/user.png" style="height:24px; width:24px; border-radius:50%;">
         </a>
         <button class="theme-toggle" id="themeToggle" title="Toggle theme" onclick="toggleTheme()">
             <i class="fas fa-moon"></i>
         </button>
         <div class="search-bar">
             <input type="text" id="searchInput" placeholder="Search...">
-            <button onclick="searchFunction()" aria-label="search button"><i class="fas fa-search" aria-hidden="true"></i></button>
+            <button onclick="searchFunction()"><i class="fas fa-search"></i></button>
         </div>
         <a href="javascript:void(0);" class="icon" onclick="myFunction()">
             <i class="fas fa-bars"></i>
         </a>
     </div>
-
     <div class="container">
-        <div class="announcement">
-            <i class="fas fa-bullhorn"></i>
-            <span>Welcome to the new and improved Havsite! Check out our latest features.</span>
-        </div>
-
-        <div class="hero-section">
-            <h1 id="title"></h1>
-            <p class="tagline">Your online space to connect with classmates, share stories, and stay updated with the latest happenings.</p>
-            <a href="new auth.html" class="btn">Join Now</a>
-        </div>
-
-        <div class="features-grid">
-            <div class="feature-card">
-                <img src="/api/placeholder/400/320" alt="Connect with Classmates">
-                <div class="feature-content">
-                    <h3>Connect with Classmates</h3>
-                    <p>Stay in touch with your friends and classmates through our intuitive chat platform.</p>
-                    <a href="ca.html" class="btn" aria-label="chat room">Start Chatting</a>
-                </div>
-            </div>
-            <div class="feature-card">
-                <img src="/api/placeholder/400/320" alt="Latest Updates">
-                <div class="feature-content">
-                    <h3>Latest Updates</h3>
-                    <p>Get all the important updates about events, assignments, and activities.</p>
-                    <a href="updates.html" class="btn" aria-label="see updates">See Updates</a>
-                </div>
-            </div>
-            <div class="feature-card">
-                <img src="/api/placeholder/400/320" alt="Fun Stories">
-                <div class="feature-content">
-                    <h3>Fun Stories</h3>
-                    <p>Read and share funny stories and memorable moments with your classmates.</p>
-                    <a href="stories.html" class="btn" aria-label="stories page">Explore Stories</a>
-                </div>
-            </div>
-        </div>
-
-        <div class="quote-container">
-            <img src="images/quote.jpg" alt="Inspirational Quote" class="quote-img">
-        </div>
-
-        <div class="cta-section">
-            <h2>Join Our Community Today</h2>
-            <p>Become part of our growing community and experience the best way to connect with your classmates and friends.</p>
-            <a href="new auth.html" class="btn" aria-label="signup button">Sign Up Now</a>
+        <h1>User Login</h1>
+        <div id="profile">
+            <h2>Welcome, <span id="displayUsername"></span>!</h2>
+            <p>Email: <span id="displayEmail"></span></p>
+            <button id="signOutButton">Sign Out</button>
         </div>
     </div>
-
+    <div class="dnf">
+        adjust the light and dark mode:
+        <button onclick="toggleTheme()">Toggle Theme</button>
+    </div>
     <footer>
-        <div class="footer-content">
-            <div class="footer-section">
-                <h3>Quick Links</h3>
-                <ul class="footer-links">
-                    <li><a href="help.html">Help Center</a></li>
-                    <li><a href="pnf.html">Contact Us</a></li>
-                    <li><a href="pnf.html">FAQ</a></li>
-                    <li><a href="arcticles.html">Articles</a></li>
-                </ul>
-            </div>
-            <div class="footer-section">
-                <h3>Features</h3>
-                <ul class="footer-links">
-                    <li><a href="ca.html">Chat</a></li>
-                    <li><a href="updates.html">Updates</a></li>
-                    <li><a href="stories.html">Stories</a></li>
-                    <li><a href="profiles.html">Profiles</a></li>
-                </ul>
-            </div>
-            <div class="footer-section">
-                <h3>Connect With Us</h3>
-                <p>Follow us on social media for updates and news</p>
-                <div class="social-icons">
-                    <a href="#" aria-label="follow us on Facebook"><i class="fab fa-facebook" aria-hidden="true"></i></a>
-                    <a href="#" aria-label="follow us on twitter"><i class="fab fa-twitter" aria-hidden="true"></i></a>
-                    <a href="#" aria-label="follow us on instagram"><i class="fab fa-instagram" aria-hidden="true"></i></a>
-                    <a href="#" aria-label="follow us on discord"><i class="fab fa-discord" aria-hidden="true"></i></a>
-                </div>
-            </div>
-        </div>
-        <div class="copyright">
-            <p>© 2024 by Vivaan | <a href="#Privacy">Privacy Policy</a> | <a href="#terms">Terms of Service</a></p>
-        </div>
+        <p>© 2024 by Vivaan | <a href="#Privacy" class="pp">Privacy Policy</a> | <a href="#terms">Terms of Service</a></p>
     </footer>
-
-    <a href="#" class="back-to-top" id="backToTop">
-        <i class="fas fa-arrow-up"></i>
-    </a>
-
-    <!-- Include external JS file -->
     <script src="myscript.js"></script>
-    
-    <script>
-        // Toggle mobile navigation
+    <script defer loading="lazy">
+        function searchFunction() {
+            var sbc = document.getElementById('sb').value.toLowerCase();
+            const pages = {
+                "help": "https://vm-havsite.github.io/help",
+                "testpage": "https://vm-havsite.github.io/practise_javascript",
+                "arcticles": "https://vm-havsite.github.io/arcticles",
+                "homepage": "https://vm-havsite.github.io/homepage",
+                "download": "https://vm-havsite.github.io/download",
+                "our team": "https://vm-havsite.github.io/our team",
+                "music": "https://vm-havsite.github.io/music",
+                "faq": "https://vm-havsite.github.io/pnf",
+                "contact us": "https://vm-havsite.github.io/pnf",
+                "profiles": "https://vm-havsite.github.io/cst"
+            };
+            if (pages[sbc]) {
+                window.location.href = pages[sbc];
+            }
+        }
+        document.getElementById("sb").addEventListener("keypress", function(event) {
+            if (event.key === "Enter") {
+                searchFunction();
+            }
+        });
+    </script>
+    <script defer loading="lazy">
         function myFunction() {
             var x = document.getElementById("myTopnav");
             if (x.className === "topnav") {
@@ -679,78 +623,6 @@
                 x.className = "topnav";
             }
         }
-
-        // Search functionality
-        function searchFunction() {
-            var searchTerm = document.getElementById('searchInput').value.toLowerCase();
-            const pages = {
-                "help": "https://vm-havsite.github.io/help",
-                "testpage": "https://vm-havsite.github.io/practise_javascript",
-                "arcticles": "https://vm-havsite.github.io/arcticles",
-                "homepage": "https://vm-havsite.github.io/homepage",
-                "download": "https://vm-havsite.github.io/download",
-                "our team": "https://vm-havsite.github.io/our team",
-                "team": "https://vm-havsite.github.io/our team",
-                "music": "https://vm-havsite.github.io/music",
-                "faq": "https://vm-havsite.github.io/pnf",
-                "contact": "https://vm-havsite.github.io/pnf",
-                "contact us": "https://vm-havsite.github.io/pnf",
-                "profiles": "https://vm-havsite.github.io/cst"
-            };
-            
-            if (pages[searchTerm]) {
-                window.location.href = pages[searchTerm];
-            } else {
-                alert("No results found for: " + searchTerm);
-            }
-        }
-
-        // Back to top button functionality
-        window.addEventListener('scroll', function() {
-            var backToTopButton = document.getElementById('backToTop');
-            if (window.pageYOffset > 300) {
-                backToTopButton.classList.add('visible');
-            } else {
-                backToTopButton.classList.remove('visible');
-            }
-        });
-
-        // Enable Enter key for search
-        document.getElementById("searchInput").addEventListener("keypress", function(event) {
-            if (event.key === "Enter") {
-                searchFunction();
-            }
-        });
-        
-        // Update theme toggle icon on page load
-        document.addEventListener('DOMContentLoaded', () => {
-            if (document.getElementById('html-root').classList.contains('dark-mode')) {
-                document.getElementById('themeToggle').innerHTML = '<i class="fas fa-sun"></i>';
-            } else {
-                document.getElementById('themeToggle').innerHTML = '<i class="fas fa-moon"></i>';
-            }
-        });
     </script>
-<script>
-    const message = "Welcome to Havsite";
-    let index = 0;
-    
-    function typeLetter() {
-      if (index < message.length) {
-        document.getElementById("title").innerHTML += message.charAt(index);
-        index++;
-        setTimeout(typeLetter, 100);
-      } else {
-        anime({
-          targets: '#typing',
-          opacity: [0.8, 1],
-          duration: 500,
-          easing: 'easeInOutCirc'
-        });
-      }
-    }
-    
-    window.onload = typeLetter;
-</script>
 </body>
 </html>

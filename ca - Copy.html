@@ -8,7 +8,7 @@
     <link rel="icon" type="image/x-icon" href="images/logo_og.png">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=send" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <style> 
+    <style>
         body {
             font-family: Arial, sans-serif;
             display: flex;
@@ -92,7 +92,7 @@
             'wght' 400,
             'GRAD' 0,
             'opsz' 24
-}
+       }
     </style>
 </head>
 <body>
@@ -127,7 +127,7 @@ onAuthStateChanged(auth, async (user) => {
             loadContacts();
         }
     } else {
-        window.location.href = "auth ui.html";
+        window.location.href = "new auth.html";
     }
 });
 
@@ -194,5 +194,39 @@ function getChatId(user1, user2) {
     return [user1, user2].sort().join('_');
 }
 </script>
+<script>
+//This script handles the creation, deletion and managing of groups
+
+document.getElementById('creategroup').addEventListener('click', async () => {
+
+    const currentDate = Date.now();
+
+    let BaseName = document.getElementById('groupname').value.trim();
+    if (!BaseName) {
+        BaseName = prompt("Please enter a group name.");
+            if (!BaseName) {
+                alert("Group name is required.");
+                return;
+            }
+    }
+
+    let username = '';
+
+    onAuthStateChanged(auth, async (user) => {
+        if (user) {
+            const userDoc = await getDoc(doc(db, "users", user.uid));
+            if (userDoc.exists()) {
+                username = userDoc.data().username;
+            }
+        }
+    });
+
+    const GroupID = '${BaseName}-${currentDate};
+        await addDoc(collection(db, `group chats`, GropID), {
+            name: BaseName,
+            createdAt: new Date(),
+            createdBy: username
+        });
+
 </body>
 </html>
