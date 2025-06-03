@@ -653,13 +653,14 @@
 
   onAuthStateChanged(auth, async (user) => {
     if (user) {
-      document.getElementById('displayUsername').textContent = user || "Unknown User";
       
       try {
         const userDoc = await getDoc(doc(db, "users", user.uid));
         if (userDoc.exists()) {
           const useremail = userDoc.data().email;
+          const username = userDoc.data().username;
           document.getElementById('displayEmail').textContent = useremail;
+          document.getElementById('displayUsername').textContent = username || "Unknown User";
         }
       } catch (error) {
         console.error("Error fetching user document:", error);
