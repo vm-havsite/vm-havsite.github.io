@@ -660,14 +660,14 @@
           const useremail = userDoc.data().email;
           const username = userDoc.data().username;
           document.getElementById('displayEmail').textContent = useremail;
-          document.getElementById('displayUsername').textContent += username || "Unknown User";
+          document.getElementById('displayUsername').textContent = username || "Unknown User";
         }
       } catch (error) {
         console.error("Error fetching user document:", error);
       }
 
     } else {
-      document.getElementById('userdetails').innerHTML = '<div class="cta-section"><h2>Join Our Community Today</h2><p>Become part of our growing community and experience the best way to connect with your classmates and friends.</p><a href="new auth.html" class="btn" aria-label="signup button">Sign Up Now</a></div>';
+      document.getElementById('userdetails').innerHTML += '<div class="cta-section"><h2>Join Our Community Today</h2><p>Become part of our growing community and experience the best way to connect with your classmates and friends.</p><a href="new auth.html" class="btn" aria-label="signup button">Sign Up Now</a></div>';
     }
   });
 </script>
