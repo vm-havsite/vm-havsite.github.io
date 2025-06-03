@@ -664,6 +664,8 @@
         }
       } catch (error) {
         console.error("Error fetching user document:", error);
+        element.parentNode.removeChild('displayEmail');
+        document.getElementById('displayUsername').textContent ="Unknown User";
       }
 
     } else {
