@@ -542,6 +542,34 @@
            background: var(--primary-gradient);
            border-radius: 2px;
    }
+    /* Call to action */
+    .cta-section {
+        background: var(--secondary-gradient);
+        padding: 60px 30px;
+        text-align: center;
+        margin: 60px 0;
+        border-radius: var(--border-radius);
+        box-shadow: var(--card-shadow);
+        color: white;
+    }
+
+    .cta-section h2 {
+        margin-top: 0;
+        font-size: 2.5em;
+    }
+
+    .cta-section p {
+        max-width: 600px;
+        margin: 20px auto 30px;
+    }
+
+    .cta-section .btn {
+        background: white;
+        color: var(--accent-color);
+        font-weight: 600;
+        padding: 12px 30px;
+        font-size: 1.1em;
+    }
 </style>
 </head>
 <body>
@@ -573,7 +601,7 @@
             <i class="fas fa-bars"></i>
         </a>
     </div>
-    <div class="container">
+    <div class="container" id="userdetails">
         <h1>User Login</h1>
         <div id="profile">
             <h2>Welcome, <span id="displayUsername"></span>!</h2>
@@ -581,13 +609,28 @@
             <button id="signOutButton">Sign Out</button>
         </div>
     </div>
-    <div class="dnf">
-        adjust the light and dark mode:
-        <button onclick="toggleTheme()">Toggle Theme</button>
-    </div>
     <footer>
         <p>© 2024 by Vivaan | <a href="#Privacy" class="pp">Privacy Policy</a> | <a href="#terms">Terms of Service</a></p>
     </footer>
+    <script>
+       import { getAuth, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js';
+       import { getFirestore, doc, getDoc, collection, getDocs, addDoc, query, orderBy, onSnapshot } from 'https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js';
+       import { app, db } from './firebase_auth.js';
+       const auth = getAuth(app);
+
+       let username = '';
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                document.getElementById('displayUsername').textContent = user;
+                const userDoc = await getDoc(doc(db, "users", user.uid));
+                    if (userDoc.exists()) {
+            	    useremail = userDoc.data().email;
+                    document.getElementById('displayEmail').textContent = useremail;
+        	    }
+           } else {
+                document.getElementById('userdetails').innerHTML = "<div class="cta-section"><h2>Join Our Community Today</h2><p>Become part of our growing community and experience the best way to connect with your classmates and friends.</p><a href="new auth.html" class="btn" aria-label="signup button">Sign Up Now</a></div></div>";
+           }
+      });
     <script src="myscript.js"></script>
     <script defer loading="lazy">
         function searchFunction() {
