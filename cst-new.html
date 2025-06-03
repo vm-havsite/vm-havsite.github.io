@@ -652,8 +652,8 @@
   const auth = getAuth(app);
 
   onAuthStateChanged(auth, async (user) => {
-    if (user) {
-      document.getElementById('displayUsername').textContent = user.displayName || user.email || "Unknown User";
+    if (user != null) {
+      document.getElementById('displayUsername').textContent = user || "Unknown User";
       
       try {
         const userDoc = await getDoc(doc(db, "users", user.uid));
