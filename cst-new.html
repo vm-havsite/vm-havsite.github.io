@@ -660,7 +660,7 @@
           const useremail = userDoc.data().email;
           const username = userDoc.data().username;
           document.getElementById('displayEmail').textContent = useremail;
-          document.getElementById('displayUsername').textContent = username || "Unknown User";
+          document.getElementById('displayUsername').textContent += username || "Unknown User";
         }
       } catch (error) {
         console.error("Error fetching user document:", error);
