@@ -652,7 +652,7 @@
   const auth = getAuth(app);
 
   onAuthStateChanged(auth, async (user) => {
-    if (user != null) {
+    if (user) {
       document.getElementById('displayUsername').textContent = user || "Unknown User";
       
       try {
