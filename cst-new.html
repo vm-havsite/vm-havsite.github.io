@@ -645,24 +645,33 @@
         </div>
     </footer>
     <script type="module">
-       import { getAuth, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js';
-       import { getFirestore, doc, getDoc, collection, getDocs, addDoc, query, orderBy, onSnapshot } from 'https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js';
-       import { app, db } from './firebase_auth.js';
-       const auth = getAuth(app);
+<script type="module">
+  import { getAuth, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js';
+  import { getFirestore, doc, getDoc } from 'https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js';
+  import { app, db } from './firebase_auth.js';
 
-       let username = '';
-        onAuthStateChanged(auth, (user) => {
-            if (user) {
-                document.getElementById('displayUsername').textContent = user;
-                const userDoc = await getDoc(doc(db, "users", user.uid));
-                    if (userDoc.exists()) {
-            	    useremail = userDoc.data().email;
-                    document.getElementById('displayEmail').textContent = useremail;
-        	    }
-           } else {
-                document.getElementById('userdetails').innerHTML = "<div class="cta-section"><h2>Join Our Community Today</h2><p>Become part of our growing community and experience the best way to connect with your classmates and friends.</p><a href="new auth.html" class="btn" aria-label="signup button">Sign Up Now</a></div></div>";
-           }
-      });
+  const auth = getAuth(app);
+
+  onAuthStateChanged(auth, async (user) => {
+    if (user) {
+      document.getElementById('displayUsername').textContent = user.displayName || user.email || "Unknown User";
+      
+      try {
+        const userDoc = await getDoc(doc(db, "users", user.uid));
+        if (userDoc.exists()) {
+          const useremail = userDoc.data().email;
+          document.getElementById('displayEmail').textContent = useremail;
+        }
+      } catch (error) {
+        console.error("Error fetching user document:", error);
+      }
+
+    } else {
+      document.getElementById('userdetails').innerHTML = '<div class="cta-section"></div>';
+    }
+  });
+</script>
+
     </script>
     <script src="myscript.js"></script>
     <script defer loading="lazy">
