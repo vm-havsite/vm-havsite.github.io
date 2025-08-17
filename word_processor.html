@@ -397,32 +397,7 @@
             documentData.content = quill.getContents();
             documentData.lastSaved = new Date().toISOString();
         }
-
-        // Save function (called when Save button is clicked)
-        function savef() {
-            updateDocumentData();
             
-            // You can customize this function to handle saving
-            console.log('Saving document:', documentData);
-            
-            // Example: You could send data to a server, save to localStorage, etc.
-            // For demonstration, we'll just show an alert
-            alert(`Document "${documentData.title}" saved successfully!\n\nWords: ${document.getElementById('wordCount').textContent}\nCharacters: ${document.getElementById('charCount').textContent}`);
-            
-            // Update status
-            const statusBar = document.querySelector('.status-bar');
-            const saveStatus = document.createElement('div');
-            saveStatus.style.color = '#107c10';
-            saveStatus.style.fontWeight = '500';
-            saveStatus.textContent = 'Saved';
-            statusBar.appendChild(saveStatus);
-            
-            setTimeout(() => {
-                if (saveStatus.parentNode) {
-                    saveStatus.remove();
-                }
-            }, 2000);
-        }
 
         // New document
         function newDocument() {
@@ -555,5 +530,71 @@ ${htmlContent}
             URL.revokeObjectURL(url);
         });
     </script>
+
+<script type="module">
+import { getAuth, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js';
+import { getFirestore, doc, getDoc, setDoc } from 'https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js';
+import { app, db } from './firebase_auth.js';
+const auth = getAuth(app);
+
+// Global variables
+let documentData = {
+  title: '',
+  content: '',
+  lastSaved: null
+};
+let username = '';
+let currentChat = '';
+
+        // Save function (called when Save button is clicked)
+        function savef() {
+
+        onAuthStateChanged(auth, async (user) => {
+          if (user) {
+            const userDoc = await getDoc(doc(db, "users", user.uid));
+            if (userDoc.exists()) {
+              username = userDoc.data().username;
+
+            	// You can customize this function to handle saving
+            	console.log('Saving document:', documentData);
+            
+            	// Example: You could send data to a server, save to localStorage, etc.
+            	// For demonstration, we'll just show an alert
+            	alert(`Document "${documentData.title}" saved successfully!\n\nWords: ${document.getElementById('wordCount').textContent}\nCharacters: ${document.getElementById('charCount').textContent}`);
+
+                var documentname = document.getElementById('docTitle').value;
+            	const htmlContent = quill.root.innerHTML;
+    	    	const messageInput = document.getElementById('messageInput');
+    	      	  if (htmlContent) {
+                   const articleId = username+documentname;
+                   await setDoc(doc(db, "arcticles", articleId), {
+                   author: username,
+                   content: htmlContent,
+                   timestamp: new Date()
+                 });
+                  messageInput.value = '';
+                }
+            
+            	// Update status
+            	const statusBar = document.querySelector('.status-bar');
+            	const saveStatus = document.createElement('div');
+            	saveStatus.style.color = '#107c10';
+           	saveStatus.style.fontWeight = '500';
+            	saveStatus.textContent = 'Saved';
+            	statusBar.appendChild(saveStatus);
+            
+            	setTimeout(() => {
+                  if (saveStatus.parentNode) {
+                      saveStatus.remove();
+                  }
+              }, 2000);
+             }
+
+            }
+        } else {
+          window.location.href = "new auth.html";
+       }
+   });
+</script>
 </body>
 </html>
